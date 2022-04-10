@@ -1,16 +1,17 @@
 # PNWstore: Pacific NorthWest Storage
-This is a python-based seismic data query toolbox for users on cascadia.ess.washington.edu.
+This is a python-based seismic data query and selection toolbox for users on cascadia.ess.washington.edu.
 
 ## What data are in pnwstore?
 - mseed data at PNW from 1980 to 2020
 - network metadata from 1980 to 2020
-    - [network/station list here]()
+    - [network/station list here](./netlist.md)
 - event metadata from 1980 to 2020 contributed by
     - [UW](https://pnsn.org/pnsn-data-products/earthquake-catalogs)  
 
 ## Why use this toolbox?
-1. The waveforms stored in `mseed` can be index with [mseedindex](https://github.com/iris-edu/mseedindex), which would dramatically improve the efficieny of data stream. This is very useful especailly when you are working on a large amount of data. However, database system, especailly the `sqlite` that mseedindex specifies, can be hard to use sometimes, and the learning curve can be very shallow.
-2. Although `.xml` files contain all information of events and/or networks, extra costs in codes and parsing time may not be ignored.
+1. The waveforms stored in `mseed` can be indexed with [mseedindex](https://github.com/iris-edu/mseedindex), which would dramatically improve the efficieny of data stream. This is very useful especailly when you are working on a large amount of data. However, database system, especailly the `sqlite` that mseedindex specifies, can be hard to use sometimes, and the learning curve can be very shallow.
+2. Although `.xml` files contain all information of events and/or seismic networks, extra costs in codes and parsing time may not be ignored.
+
 
 
 ## Database Schema
