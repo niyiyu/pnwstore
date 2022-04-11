@@ -10,14 +10,42 @@ This is a python-based seismic data query and selection toolbox for users on cas
 
 ## Why use this toolbox?
 1. The waveforms stored in `mseed` can be indexed with [mseedindex](https://github.com/iris-edu/mseedindex), which would dramatically improve the efficieny of data stream. This is very useful especailly when you are working on a large amount of data. However, database system, especailly the `sqlite` that mseedindex specifies, can be hard to use sometimes, and the learning curve can be very shallow.
-2. Although `.xml` files contain all information of events and/or seismic networks, extra costs in codes and parsing time may not be ignored.
+2. Although `xml` files contain all information of events and/or seismic networks, extra costs in codes and parsing time may not be ignored.
 
 
+## Usage
+### Query and select stream
+```python
+from pnwstore.mseed import WaveformClient
 
-## Database Schema
-PNWstore uses mysql to index all seismic data. Below are the schemas for each tables.
-### network schema 
+client = WaveformClient()
+
+# Query all stations with channel EH? from UW network at year 2020 and doy 200.
+for item in client.query('distinct station', network = "UW", channel = "EH?", year = "2020", doy = "200"):
+    stations.append(item[0])
+
+
+# Read with obspy and select channel
+for sta in stations:
+    s = obspy.read(filename_mapper(sta))
+    s = s.select(channel = "EH?")
+# time: 37.31 s
+
+
+# Read with PNWstore index
+for sta in stations:
+    s = client.get_waveforms(network = "UW", 
+                          station = sta, 
+                          channel = "EH?", 
+                          year = "2020", 
+                          doy = "200")
+# time: 9.24 s
 ```
+
+## Database schema
+PNWstore uses mysql to index all seismic data. Below are the schemas for each table.
+### network schema 
+```mysql
 create table network (     \
     channel_id MEDIUMINT NOT NULL AUTO_INCREMENT,  \
     network_code VARCHAR(3) NOT NULL,              \
@@ -35,7 +63,7 @@ create table network (     \
 );
 ```
 ### catalog schema
-```
+```mysql
 create table catalog (     \
     source_id VARCHAR(10) NOT NULL,                \
     source_origin_time FLOAT NOT NULL,             \
@@ -50,7 +78,7 @@ create table catalog (     \
 ```
 ### mseed schema
 Note that each year relates to an individual table.
-```
+```mysql
 create table mseed_YYYY (      \
     mseed_id MEDIUMINT NOT NULL AUTO_INCREMENT,   \
     network VARCHAR(3) NOT NULL,                  \
