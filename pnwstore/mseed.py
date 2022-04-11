@@ -14,11 +14,13 @@ def connect_dbs(years):
     curs = {}
     for _y in years:
         dbs[_y] = sqlite3.connect(dbs_mapper(_y))
-        curs[_y] = dbs[_y].cursor()
+        curs[str(_y)] = dbs[_y].cursor()
     return dbs, curs
 
 
-def query(cur, keys, showquery=False, **kwargs):
+def query(curs, keys, showquery=False, **kwargs):
+    if 'year' not in kwargs:
+        raise ValueError("Year is a required argument.")
     query_str = "select "
     if len(keys) > 0:
         query_str += ", ".join(keys)
@@ -50,10 +52,13 @@ def query(cur, keys, showquery=False, **kwargs):
             query_str += " and ".join(_qs)
     if showquery:
         print(query_str)
-    return cur.execute(query_str)
+    if isinstance(curs, dict):
+        return curs[kwargs['year']].execute(query_str)
+    else:
+        return curs.execute(query_str)
 
 
-def stream(cur, **kwargs):
+def get_waveforms(cur, headeronly = False, **kwargs):
     rst = query(cur, ["byteoffset", "bytes", "filename"], **kwargs)
     s = obspy.Stream()
     for _i in rst:
@@ -63,5 +68,5 @@ def stream(cur, **kwargs):
         with open(seedfile, "rb") as f:
             f.seek(byteoffset)
             buff = io.BytesIO(f.read(byte))
-            s += obspy.read(buff)
+            s += obspy.read(buff, headeronly = headeronly)
     return s
