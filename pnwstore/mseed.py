@@ -18,19 +18,17 @@ def connect_dbs(years):
     return dbs, curs
 
 
-
-
 class WaveformClient(object):
-    def __init__(self, year = range(1980, 2021)):
+    def __init__(self, year=range(1980, 2021)):
         if isinstance(year, int):
             self._db, self._cursor = connect_db(year)
             self._year = [year]
         else:
             self._db, self._cursor = connect_dbs(year)
             self._year = list(year)
-        
-    def query(self, keys = "*", showquery=False, **kwargs):
-        if 'year' not in kwargs:
+
+    def query(self, keys="*", showquery=False, **kwargs):
+        if "year" not in kwargs:
             raise ValueError("Year is a required argument.")
         query_str = "select "
         if isinstance(keys, str):
@@ -67,12 +65,11 @@ class WaveformClient(object):
         if showquery:
             print(query_str)
         if isinstance(self._cursor, dict):
-            return self._cursor[kwargs['year']].execute(query_str)
+            return self._cursor[kwargs["year"]].execute(query_str)
         else:
             return self._cursor.execute(query_str)
 
-
-    def get_waveforms(self, headeronly = False, **kwargs):
+    def get_waveforms(self, headeronly=False, **kwargs):
         rst = self.query(["byteoffset", "bytes", "filename"], **kwargs)
         s = obspy.Stream()
         for _i in rst:
@@ -82,5 +79,5 @@ class WaveformClient(object):
             with open(seedfile, "rb") as f:
                 f.seek(byteoffset)
                 buff = io.BytesIO(f.read(byte))
-                s += obspy.read(buff, headeronly = headeronly)
+                s += obspy.read(buff, headeronly=headeronly)
         return s

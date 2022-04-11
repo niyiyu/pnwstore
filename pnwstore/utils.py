@@ -1,4 +1,4 @@
-sqlite_path = "/home/niyiyu/Research/MachineLearning/PNSN_catalog/mseedindex/"
+sqlite_path = "~/.pnwstore/mseed/"
 
 
 def year2day(quake_year):
