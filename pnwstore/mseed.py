@@ -30,7 +30,7 @@ class WaveformClient(object):
     def query(self, keys="*", showquery=False, **kwargs):
         if "year" not in kwargs:
             raise ValueError("Year is a required argument.")
-        query_str = "select "
+        query_str = "SELECT "
         if isinstance(keys, str):
             query_str += keys
         else:
@@ -38,7 +38,7 @@ class WaveformClient(object):
                 query_str += ", ".join(keys)
             else:
                 query_str += "*"
-        query_str += " from tsindex"
+        query_str += " FROM tsindex"
         _qs = []
         for _k, _i in kwargs.items():
             if "_" in _i or "%" in _i or "-" in _i:
@@ -48,20 +48,20 @@ class WaveformClient(object):
                     if "?" not in _i and "*" not in _i:
                         _q = "%s = '%s'" % (_k, _i)
                     else:
-                        _q = "%s like '%s'" % (_k, wildcard_mapper(_i))
+                        _q = "%s LIKE '%s'" % (_k, wildcard_mapper(_i))
                     _qs.append(_q)
                 elif _k in ["doy", "year"]:
-                    _q = "filename like '%%.%s%%'" % _i
+                    _q = "filename LIKE '%%.%s%%'" % _i
                     _qs.append(_q)
                 else:
                     raise ValueError
 
         if len(_qs) != 0:
-            query_str += " where "
+            query_str += " WHERE "
             if len(_qs) == 1:
                 query_str += _qs[0]
             else:
-                query_str += " and ".join(_qs)
+                query_str += " AND ".join(_qs)
         if showquery:
             print(query_str)
         if isinstance(self._cursor, dict):
