@@ -1,3 +1,4 @@
+from unittest import result
 import mysql.connector
 from numpy import isin
 from obspy.core.utcdatetime import UTCDateTime
@@ -18,44 +19,55 @@ class QuakeClient(object):
         )
         self._cursor = self._db.cursor()
 
-    def query(self, keys="source_id", showquery=False, **kwargs):
+    def query(self, keys="*", showquery=False, **kwargs):
+        if hasattr(self, "_keys"):
+            pass
+        else:
+            self._cursor.execute(f"SHOW COLUMNS FROM catalog;")
+            self._keys = [i[0] for i in self._cursor.fetchall()]
+
         query_str = "SELECT "
 
         if isinstance(keys, str):
-            query_str += keys
+            query_key = keys
         else:
             if len(keys) > 0:
-                query_str += ", ".join(keys)
+                query_key = ", ".join(keys)
             else:
-                query_str += "*"
+                query_key = "*"
 
+        query_str += query_key
         query_str += " FROM catalog "
         _qs = []
         for _k, _i in kwargs.items():
-            if _k == "starttime":
+            if _k == "mintime":
                 if isinstance(_i, UTCDateTime):
-                    _qs.append(f"source_origin_time >= {_i.timestamp}")
+                    _qs.append(f"origin_timestamp >= {_i.timestamp}")
                 else:
-                    _qs.append(f"source_origin_time >= {UTCDateTime(_i).timestamp}")
-            elif _k == "endtime":
+                    _qs.append(f"origin_timestamp >= {UTCDateTime(_i).timestamp}")
+            elif _k == "maxtime":
                 if isinstance(_i, UTCDateTime):
-                    _qs.append(f"source_origin_time <= {_i.timestamp}")
+                    _qs.append(f"origin_timestamp <= {_i.timestamp}")
                 else:
-                    _qs.append(f"source_origin_time <= {UTCDateTime(_i).timestamp}")
+                    _qs.append(f"origin_timestamp <= {UTCDateTime(_i).timestamp}")
             elif _k == "contributor":
-                _qs.append(f"source_contributor = '{_i}'")
+                _qs.append(f"contributor = '{_i}'")
             elif _k == "minlatitude":
-                _qs.append(f"source_latitude_deg >= {_i}")
+                _qs.append(f"latitude >= {_i}")
             elif _k == "maxlatitude":
-                _qs.append(f"source_latitude_deg <= {_i}")
+                _qs.append(f"latitude <= {_i}")
             elif _k == "minlongitude":
-                _qs.append(f"source_longitude_deg >= {_i}")
+                _qs.append(f"longitude >= {_i}")
             elif _k == "maxlongitude":
-                _qs.append(f"source_longitude_deg <= {_i}")
+                _qs.append(f"longitude <= {_i}")
             elif _k == "mindepth":
-                _qs.append(f"source_depth_km >= {_i}")
+                _qs.append(f"depth >= {_i}")
             elif _k == "maxdepth":
-                _qs.append(f"source_depth_km <= {_i}")
+                _qs.append(f"depth <= {_i}")
+            elif _k == "minmagnitude":
+                _qs.append(f"magnitude >= {_i}")
+            elif _k == "maxmagnitude":
+                _qs.append(f"magnitude <= {_i}")
 
         if len(_qs) != 0:
             query_str += " WHERE "
@@ -68,7 +80,11 @@ class QuakeClient(object):
             print(query_str)
         self._cursor.execute(query_str)
 
-        return self._cursor.fetchall()
+        result = self._cursor.fetchall()
+        if "*" in query_key:
+            return rst2df(result, self._keys)
+        else:
+            return rst2df(result, keys)
 
 
 class PickClient(object):

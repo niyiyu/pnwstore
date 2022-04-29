@@ -14,6 +14,27 @@ This is a python-based seismic data query and selection toolbox for users on cas
 
 
 ## Usage
+### Query earthquake catalog
+```python
+from obspy.core.utcdatetime import UTCDateTime
+from pnwstore.catalog import QuakeClient
+
+client = QuakeClient(USERNAME, PASSWORD)
+
+client.query(mintime = UTCDateTime("1980-01-01T00:00:00"),  
+             maxtime = UTCDateTime("2021-01-01T00:00:00"), 
+             minlatitude = 40,    maxlatitude = 50,
+             minlongitude = -128, maxlongitude = -120,
+             minmagnitude = 5.9)
+
+# A pandas DataFrame is returned.
+#   source_id   origin_timestamp year month day doy hour minute second  microsecond latitude longitude  depth  magnitude contributor number_of_pick
+# 0 uw10313718  748582000.0      1993 9     21  264 3    26     55      630000      42.316    -122.027  8.560  5.9       uw          380
+# 1 uw10313838  748590000.0      1993 9     21  264 5    45     35      230000      42.358    -122.058  8.530  6.0       uw          427
+# 2 uw10530748  983386000.0      2001 2     28  59  18   54     32      830000      47.149    -122.727  51.798 6.8       uw          98
+
+```
+
 ### Query phase picks
 ```python
 from obspy.core.utcdatetime import UTCDateTime
@@ -22,16 +43,15 @@ from pnwstore.catalog import PickClient
 client = PickClient(USERNAME, PASSWORD)
 
 client.query(network = "UW", station = "SHW", phase = "P*",
-    mintime = UTCDateTime("2000-01-01"), maxtime = UTCDateTime("2000-01-10"))
+             mintime = UTCDateTime("2000-01-01"), 
+             maxtime = UTCDateTime("2000-01-10"))
 
 # A pandas DataFrame is returned.
-#    pick_id   source_id network station location channel    timestamp  year month day doy  hour  minute  second  microsecond phase evaluation_mode uncertainty  backazimuth contributor 
-# 0  1133412  uw10485733      UW     SHW       --     EHZ  947343000.0  2000   1    8    8    14      57      23       680000     P          manual   0.05         79.0          UW
-# 1  1133508  uw10485213      UW     SHW       --     EHZ  947142000.0  2000   1    6    6     6      52      56       790000     P          manual   0.08         63.6          UW 
-# 2  1133612  uw10484688      UW     SHW       --     EHZ  946890000.0  2000   1    3    3     9       0      14       280000     P          manual   0.22        222.1          UW 
+#   pick_id   source_id network station location channel    timestamp  year month day doy  hour  minute  second  microsecond phase evaluation_mode uncertainty  backazimuth contributor 
+# 0 1133412  uw10485733      UW     SHW       --     EHZ  947343000.0  2000   1    8    8    14      57      23       680000     P          manual   0.05         79.0          UW
+# 1 1133508  uw10485213      UW     SHW       --     EHZ  947142000.0  2000   1    6    6     6      52      56       790000     P          manual   0.08         63.6          UW 
+# 2 1133612  uw10484688      UW     SHW       --     EHZ  946890000.0  2000   1    3    3     9       0      14       280000     P          manual   0.22        222.1          UW 
 ```
-
-
 
 ### Query and select stream
 ```python
@@ -40,7 +60,8 @@ from pnwstore.mseed import WaveformClient
 client = WaveformClient()
 
 # Query all stations with channel EH? from UW network at year 2020 and doy 200.
-for item in client.query('distinct station', network = "UW", channel = "EH?", year = "2020", doy = "200"):
+for item in client.query(keys = 'distinct station', 
+            network = "UW", channel = "EH?", year = "2020", doy = "200"):
     stations.append(item[0])
 
 
@@ -60,6 +81,10 @@ for sta in stations:
                           doy = "200")
 # time: 9.24 s
 ```
+
+### Query phase picks
+TODO
+
 
 ## Database schema
 PNWstore uses mysql to index all seismic data. Below are the schemas for each table.
@@ -85,12 +110,20 @@ create table network (                             \
 ```mysql
 create table catalog (                             \
     source_id VARCHAR(10) NOT NULL,                \
-    source_origin_time FLOAT NOT NULL,             \
-    source_latitude_deg FLOAT NOT NULL,            \
-    source_longitude_deg FLOAT NOT NULL,           \
-    source_depth_km FLOAT NOT NULL,                \
-    source_magnitude FLOAT NOT NULL,               \
-    source_contributor VARCHAR(4) NOT NULL,        \
+    origin_timestamp FLOAT NOT NULL,               \
+    year SMALLINT NOT NULL,                        \
+    month TINYINT NOT NULL,                        \
+    day TINYINT NOT NULL,                          \
+    doy SMALLINT NOT NULL,                         \
+    hour TINYINT NOT NULL,                         \
+    minute TINYINT NOT NULL,                       \
+    second TINYINT NOT NULL,                       \
+    microsecond MEDIUMINT NOT NULL,                \
+    latitude FLOAT NOT NULL,                       \
+    longitude FLOAT NOT NULL,                      \
+    depth FLOAT NOT NULL,                          \
+    magnitude FLOAT NOT NULL,                      \
+    contributor VARCHAR(4) NOT NULL,               \
     number_of_pick SMALLINT NOT NULL,              \
     PRIMARY KEY (source_id)                        \
 );
@@ -151,3 +184,9 @@ create table picks_CONTRIBUTOR (                  \
     PRIMARY KEY (pick_id)                         \
 );"
 ```
+
+## Reference
+* https://pnsn.org
+* https://ds.iris.edu/ds/nodes/dmc/
+* https://earthquake.usgs.gov/data/comcat/
+* https://github.com/iris-edu/mseedindex
