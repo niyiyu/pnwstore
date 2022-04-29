@@ -51,7 +51,7 @@ class WaveformClient(object):
                         _q = "%s LIKE '%s'" % (_k, wildcard_mapper(_i))
                     _qs.append(_q)
                 elif _k in ["doy", "year"]:
-                    _q = "filename LIKE '%%.%s%%'" % _i
+                    _q = "filename LIKE '%%/%s/%%'" % _i
                     _qs.append(_q)
                 else:
                     raise ValueError
