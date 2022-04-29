@@ -22,8 +22,35 @@ def dbs_mapper(year):
     return sqlite_path + "%d.sqlite" % year
 
 
-def rst2df(result, keys):
+def mseedkeys():
+    return [
+        "network",
+        "station",
+        "location",
+        "channel",
+        "quality",
+        "version",
+        "starttime",
+        "endtime",
+        "samplerate",
+        "filename",
+        "byteoffset",
+        "bytes",
+        "hash",
+        "timeindex",
+        "timespans",
+        "timerates",
+        "format",
+        "filemodtime",
+        "updated",
+        "scanned",
+    ]
+
+
+def rst2df(result, keys=None):
     if isinstance(keys, str):
         return pd.DataFrame(result, columns=[keys])
-    else:
+    elif isinstance(keys, list):
         return pd.DataFrame(result, columns=keys)
+    else:
+        return pd.DataFrame(result)

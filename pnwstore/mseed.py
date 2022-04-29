@@ -1,6 +1,8 @@
 import sqlite3
+from tokenize import Number
 import obspy
 import io
+
 from .utils import *
 
 
@@ -26,18 +28,21 @@ class WaveformClient(object):
         else:
             self._db, self._cursor = connect_dbs(year)
             self._year = list(year)
+        self._keys = mseedkeys()
 
     def query(self, keys="*", showquery=False, **kwargs):
         if "year" not in kwargs:
             raise ValueError("Year is a required argument.")
         query_str = "SELECT "
         if isinstance(keys, str):
-            query_str += keys
+            query_key = keys
         else:
             if len(keys) > 0:
-                query_str += ", ".join(keys)
+                query_key = ", ".join(keys)
             else:
-                query_str += "*"
+                query_key = "*"
+
+        query_str += query_key
         query_str += " FROM tsindex"
         _qs = []
         for _k, _i in kwargs.items():
@@ -46,12 +51,12 @@ class WaveformClient(object):
             else:
                 if _k in ["station", "network", "location", "channel"]:
                     if "?" not in _i and "*" not in _i:
-                        _q = "%s = '%s'" % (_k, _i)
+                        _q = f"{_k} = '{_i}'"
                     else:
-                        _q = "%s LIKE '%s'" % (_k, wildcard_mapper(_i))
+                        _q = f"{_k} LIKE '{wildcard_mapper(_i)}'"
                     _qs.append(_q)
                 elif _k in ["doy", "year"]:
-                    _q = "filename LIKE '%%/%s/%%'" % _i
+                    _q = f"filename LIKE '%%/{_i}/%%'"
                     _qs.append(_q)
                 else:
                     raise ValueError
