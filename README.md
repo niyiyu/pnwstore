@@ -82,7 +82,7 @@ for sta in stations:
 # time: 9.24 s
 ```
 
-### Query phase picks
+### Query network meta
 TODO
 
 
