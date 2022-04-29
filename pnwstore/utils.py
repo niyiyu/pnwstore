@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 def year2day(quake_year):
     return abs(quake_year - 2020) % 11
 
@@ -17,3 +20,10 @@ def filename_mapper(filename):
 def dbs_mapper(year):
     sqlite_path = "/data/wsd01/PNWstore_sqlite/"
     return sqlite_path + "%d.sqlite" % year
+
+
+def rst2df(result, keys):
+    if isinstance(keys, str):
+        return pd.DataFrame(result, columns=[keys])
+    else:
+        return pd.DataFrame(result, columns=keys)
