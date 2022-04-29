@@ -14,6 +14,25 @@ This is a python-based seismic data query and selection toolbox for users on cas
 
 
 ## Usage
+### Query phase picks
+```python
+from obspy.core.utcdatetime import UTCDateTime
+from pnwstore.catalog import PickClient
+
+client = PickClient(USERNAME, PASSWORD)
+
+client.query(network = "UW", station = "SHW", phase = "P*",
+    mintime = UTCDateTime("2000-01-01"), maxtime = UTCDateTime("2000-01-10"))
+
+# A pandas DataFrame is returned.
+# pick_id   source_id network station location channel    timestamp    year  month  day  doy  hour  minute  second  microsecond phase evaluation_mode uncertainty  backazimuth contributor 
+# 0  1133412  uw10485733      UW     SHW       --     EHZ  947343000.0  2000   1    8    8    14      57      23       680000     P          manual   0.05         79.0          UW
+# 1  1133508  uw10485213      UW     SHW       --     EHZ  947142000.0  2000   1    6    6     6      52      56       790000     P          manual   0.08         63.6          UW 
+# 2  1133612  uw10484688      UW     SHW       --     EHZ  946890000.0  2000   1    3    3     9       0      14       280000     P          manual   0.22        222.1          UW 
+```
+
+
+
 ### Query and select stream
 ```python
 from pnwstore.mseed import WaveformClient
