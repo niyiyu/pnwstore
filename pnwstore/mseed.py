@@ -1,5 +1,4 @@
 import sqlite3
-from tokenize import Number
 import obspy
 import io
 
