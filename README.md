@@ -65,7 +65,7 @@ for sta in stations:
 PNWstore uses mysql to index all seismic data. Below are the schemas for each table.
 ### network schema 
 ```mysql
-create table network (     \
+create table network (                             \
     channel_id MEDIUMINT NOT NULL AUTO_INCREMENT,  \
     network_code VARCHAR(3) NOT NULL,              \
     station_code VARCHAR(5) NOT NULL,              \
@@ -83,7 +83,7 @@ create table network (     \
 ```
 ### catalog schema
 ```mysql
-create table catalog (     \
+create table catalog (                             \
     source_id VARCHAR(10) NOT NULL,                \
     source_origin_time FLOAT NOT NULL,             \
     source_latitude_deg FLOAT NOT NULL,            \
@@ -98,7 +98,7 @@ create table catalog (     \
 ### mseed schema
 Note that each year relates to an individual table.
 ```mysql
-create table mseed_YYYY (      \
+create table mseed_YYYY (                         \
     mseed_id MEDIUMINT NOT NULL AUTO_INCREMENT,   \
     network VARCHAR(3) NOT NULL,                  \
     station VARCHAR(5) NOT NULL,                  \
@@ -122,4 +122,32 @@ create table mseed_YYYY (      \
     scanned VARCHAR(26) NOT NULL,                 \
     PRIMARY KEY (mseed_id)                        \
 );
+```
+
+### pick schema
+Note that each contributor relates to an individual table.
+```mysql 
+create table picks_CONTRIBUTOR (                  \
+    pick_id INT NOT NULL AUTO_INCREMENT,          \
+    source_id VARCHAR(10) NOT NULL,               \
+    network VARCHAR(3) NOT NULL,                  \
+    station VARCHAR(5) NOT NULL,                  \
+    location VARCHAR(3) NOT NULL,                 \
+    channel CHAR(3) NOT NULL,                     \
+    timestamp FLOAT NOT NULL,                     \
+    year SMALLINT NOT NULL,                       \
+    month TINYINT NOT NULL,                       \
+    day TINYINT NOT NULL,                         \
+    doy SMALLINT NOT NULL,                        \
+    hour TINYINT NOT NULL,                        \
+    minute TINYINT NOT NULL,                      \
+    second TINYINT NOT NULL,                      \
+    microsecond MEDIUMINT NOT NULL,               \
+    phase VARCHAR(6) NOT NULL,                    \
+    evaluation_mode VARCHAR(10) NOT NULL,         \
+    uncertainty FLOAT,                            \
+    backazimuth FLOAT,                            \
+    contributor VARCHAR(6) NOT NULL,              \
+    PRIMARY KEY (pick_id)                         \
+);"
 ```
