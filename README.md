@@ -110,7 +110,7 @@ create table network (                             \
 ```mysql
 create table catalog (                             \
     source_id VARCHAR(10) NOT NULL,                \
-    origin_timestamp FLOAT NOT NULL,               \
+    timestamp DECIMAL(16, 6) NOT NULL,             \
     year SMALLINT NOT NULL,                        \
     month TINYINT NOT NULL,                        \
     day TINYINT NOT NULL,                          \
@@ -167,7 +167,7 @@ create table picks_CONTRIBUTOR (                  \
     station VARCHAR(5) NOT NULL,                  \
     location VARCHAR(3) NOT NULL,                 \
     channel CHAR(3) NOT NULL,                     \
-    timestamp FLOAT NOT NULL,                     \
+    timestamp DECIMAL(16, 6) NOT NULL,            \
     year SMALLINT NOT NULL,                       \
     month TINYINT NOT NULL,                       \
     day TINYINT NOT NULL,                         \
