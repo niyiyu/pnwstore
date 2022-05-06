@@ -1,6 +1,4 @@
-from unittest import result
 import mysql.connector
-from numpy import isin
 from obspy.core.utcdatetime import UTCDateTime
 
 from .utils import *
@@ -42,14 +40,14 @@ class QuakeClient(object):
         for _k, _i in kwargs.items():
             if _k == "mintime":
                 if isinstance(_i, UTCDateTime):
-                    _qs.append(f"origin_timestamp >= {_i.timestamp}")
+                    _qs.append(f"timestamp >= {_i.timestamp}")
                 else:
-                    _qs.append(f"origin_timestamp >= {UTCDateTime(_i).timestamp}")
+                    _qs.append(f"timestamp >= {UTCDateTime(_i).timestamp}")
             elif _k == "maxtime":
                 if isinstance(_i, UTCDateTime):
-                    _qs.append(f"origin_timestamp <= {_i.timestamp}")
+                    _qs.append(f"timestamp <= {_i.timestamp}")
                 else:
-                    _qs.append(f"origin_timestamp <= {UTCDateTime(_i).timestamp}")
+                    _qs.append(f"timestamp <= {UTCDateTime(_i).timestamp}")
             elif _k == "contributor":
                 _qs.append(f"contributor = '{_i}'")
             elif _k == "minlatitude":
@@ -172,7 +170,7 @@ class PickClient(object):
             if len(_qs) == 1:
                 query_str += _qs[0]
             else:
-                query_str += " and ".join(_qs)
+                query_str += " AND ".join(_qs)
         query_str += ";"
         if showquery:
             print(query_str)

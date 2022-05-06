@@ -92,17 +92,18 @@ PNWstore uses mysql to index all seismic data. Below are the schemas for each ta
 ```mysql
 create table network (                             \
     channel_id MEDIUMINT NOT NULL AUTO_INCREMENT,  \
-    network_code VARCHAR(3) NOT NULL,              \
-    station_code VARCHAR(5) NOT NULL,              \
-    location_code VARCHAR(3) NOT NULL,             \
-    channel_code CHAR(3) NOT NULL,                 \
-    station_latitude_deg FLOAT NOT NULL,           \
-    station_longitude_deg FLOAT NOT NULL,          \
-    station_depth_km FLOAT NOT NULL,               \
-    station_starttime FLOAT NOT NULL,              \
-    station_endtime FLOAT NOT NULL,                \
-    trace_sampling_rate_hz SMALLINT NOT NULL,      \
-    azimuth_deg FLOAT,                             \
+    network VARCHAR(3) NOT NULL,                   \
+    station VARCHAR(5) NOT NULL,                   \
+    location VARCHAR(3) NOT NULL,                  \
+    channel CHAR(3) NOT NULL,                      \
+    latitude FLOAT NOT NULL,                       \
+    longitude FLOAT NOT NULL,                      \
+    elevation DECIMAL(6, 2) NOT NULL,              \
+    depth DECIMAL(6, 2) NOT NULL,                  \
+    starttime DECIMAL(16, 1) NOT NULL,             \
+    endtime DECIMAL(16, 1) NOT NULL,               \
+    sampling_rate     DECIMAL(10, 4) NOT NULL,     \
+    azimuth DECIMAL(5, 2),                         \
     PRIMARY KEY (channel_id)                       \
 );
 ```
