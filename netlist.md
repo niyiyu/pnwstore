@@ -47,8 +47,12 @@
 
 ## Networks meta
 
-7A: off-shore
-7D: off-shore
-OO: off-shore
-X9: off-shore
-Z5: off-shore
+- 7A: off-shore
+- 7D: off-shore
+- OO: off-shore
+- X9: off-shore
+- Z5: off-shore
+
+## Reference
+* https://ds.iris.edu/mda/
+* https://ds.iris.edu/ds/
