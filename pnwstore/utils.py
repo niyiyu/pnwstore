@@ -2,7 +2,10 @@ import pandas as pd
 
 
 def year2day(quake_year):
-    return abs(quake_year - 2020) % 11
+    if quake_year == 2010:
+        return 8
+    else:
+        return abs(quake_year - 2031) % 11
 
 
 def wildcard_mapper(c):
