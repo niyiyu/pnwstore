@@ -2,9 +2,9 @@
 This is a python-based seismic data query and selection toolbox for users on cascadia.ess.washington.edu.
 
 ## What data are in pnwstore?
-- mseed data at PNW from 1980 to 2020
+- mseed data at PNW from 1980 to 2021
 - network metadata from 1980 to 2020
-    - [network/station list here](./netlist.md)
+    - [network list here](./netlist.md)
 - event metadata and phase information contributed by
     - [UW](https://pnsn.org/pnsn-data-products/earthquake-catalogs) (1980-2020)
 
@@ -83,7 +83,20 @@ for sta in stations:
 ```
 
 ### Query network meta
-TODO
+```python
+from obspy.core.utcdatetime import UTCDateTime
+from pnwstore.station import StationClient
+
+client = StationClient(USERNAME, PASSWORD)
+client.query("*", network = "UW", channel = "EH?",
+            mintime = UTCDateTime("2010-01-15"), 
+            maxtime = UTCDateTime("2000-01-16"), showquery = True)
+
+# A pandas DataFrame is returned.
+#    channel_id network station location channel  latitude  longitude elevation  depth     starttime       endtime sampling_rate azimuth 
+# 0       45376      UW     SHW       --     EHZ   46.1935   -122.236   1425.00   0.00   867283200.0  1207008000.0      100.0000    None
+# 1       45377      UW     SHW       --     EHZ   46.1935   -122.236   1425.00   0.00  1207008000.0  1536105600.0      100.0000    None  
+```
 
 
 ## Database schema
