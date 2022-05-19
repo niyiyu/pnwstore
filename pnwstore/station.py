@@ -39,7 +39,7 @@ class StationClient(object):
         _qs = []
         for _k, _i in kwargs.items():
             if isinstance(_i, str):
-                if "_" in _i or "%" in _i or "-" in _i:
+                if "_" in _i or "%" in _i:
                     raise ValueError("Only wildcards ? and * are supported.")
                 else:
                     if _k in [
