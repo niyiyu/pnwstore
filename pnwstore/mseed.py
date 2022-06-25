@@ -1,6 +1,7 @@
 import sqlite3
 import obspy
 import io
+import asyncio
 
 from .utils import *
 
@@ -29,9 +30,16 @@ class WaveformClient(object):
             self._year = list(year)
         self._keys = mseedkeys()
 
+    def query_waveforms(self, keys="*", **kwargs):
+        rst = self.query(keys, **kwargs)
+        if keys == "*":
+            return rst2df(rst, self._keys)
+        else:
+            return rst2df(rst, keys)
+
     def query(self, keys="*", showquery=False, **kwargs):
         if "year" not in kwargs:
-            raise ValueError("Year is a required argument.")
+            raise ValueError("year is a required argument.")
         query_str = "SELECT "
         if isinstance(keys, str):
             query_key = keys
