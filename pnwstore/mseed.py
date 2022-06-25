@@ -85,3 +85,31 @@ class WaveformClient(object):
                 buff = io.BytesIO(f.read(byte))
                 s += obspy.read(buff, headeronly=headeronly)
         return s
+
+    def get_waveforms_bulk(self, bulk):
+        """
+        Follow the API of obspy.clients.fdsn.client.Client.get_waveforms_bulk
+        """
+        if isinstance(bulk, list):
+            s = obspy.Stream()
+            for _b in bulk:
+                net, sta, loc, cha, st, et = _b
+
+                # TODO: work on multiple days
+                assert st.year == et.year
+                assert st.julday == et.julday
+
+                year = st.year
+                doy = st.julday
+                tr = self.get_waveforms(
+                    network=net,
+                    station=sta,
+                    location=loc,
+                    channel=cha,
+                    year=str(year),
+                    doy=str(doy).zfill(3),
+                )
+                tr.trim(starttime=st, endtime=et)
+                s += tr
+
+        return s
