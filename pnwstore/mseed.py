@@ -31,13 +31,13 @@ class WaveformClient(object):
         self._keys = mseedkeys()
 
     def query_waveforms(self, keys="*", **kwargs):
-        rst = self.query(keys, **kwargs)
+        rst = self._query(keys, **kwargs)
         if keys == "*":
             return rst2df(rst, self._keys)
         else:
             return rst2df(rst, keys)
 
-    def query(self, keys="*", showquery=False, **kwargs):
+    def _query(self, keys="*", showquery=False, **kwargs):
         if "year" not in kwargs:
             raise ValueError("year is required.")
         else:
@@ -95,8 +95,8 @@ class WaveformClient(object):
         else:
             return self._cursor.execute(query_str)
 
-    def get_waveforms(self, headeronly=False, **kwargs):
-        rst = self.query(["byteoffset", "bytes", "filename"], **kwargs)
+    def get_waveforms(self, headeronly=False, starttime = None, endtime = None, **kwargs):
+        rst = self._query(["byteoffset", "bytes", "filename"], **kwargs)
         s = obspy.Stream()
         for _i in rst:
             byteoffset = _i[0]
