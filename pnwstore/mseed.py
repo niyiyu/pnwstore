@@ -39,7 +39,21 @@ class WaveformClient(object):
 
     def query(self, keys="*", showquery=False, **kwargs):
         if "year" not in kwargs:
-            raise ValueError("year is a required argument.")
+            raise ValueError("year is required.")
+        else:
+            kwargs["year"] = str(kwargs["year"])
+
+        if "doy" in kwargs:
+            kwargs["doy"] = str(kwargs["doy"]).zfill(3)
+        elif "month" in kwargs and "day" in kwargs:
+            t = obspy.core.utcdatetime.UTCDateTime(
+                f'{kwargs["year"]}-{kwargs["month"]}-{kwargs["day"]}'
+            )
+            kwargs["doy"] = str(t.julday).zfill(3)
+            del kwargs["month"], kwargs["day"]
+        else:
+            raise ValueError("Either month/day or doy is required.")
+
         query_str = "SELECT "
         if isinstance(keys, str):
             query_key = keys
@@ -114,8 +128,8 @@ class WaveformClient(object):
                     station=sta,
                     location=loc,
                     channel=cha,
-                    year=str(year),
-                    doy=str(doy).zfill(3),
+                    year=year,
+                    doy=doy,
                 )
                 tr.trim(starttime=st, endtime=et)
                 s += tr
