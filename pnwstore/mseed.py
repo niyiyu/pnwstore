@@ -21,7 +21,7 @@ def connect_dbs(years):
 
 
 class WaveformClient(object):
-    def __init__(self, year=range(1980, 2021)):
+    def __init__(self, year=range(1980, 2022)):
         if isinstance(year, int):
             self._db, self._cursor = connect_db(year)
             self._year = [year]
