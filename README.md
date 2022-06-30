@@ -60,10 +60,8 @@ from pnwstore.mseed import WaveformClient
 client = WaveformClient()
 
 # Query all stations with channel EH? from UW network at year 2020 and doy 200.
-for item in client.query(keys = 'distinct station', 
-            network = "UW", channel = "EH?", year = "2020", doy = "200"):
-    stations.append(item[0])
-
+for item in client.query(keys = 'distinct station', network = "UW", 
+                         channel = "EH?", year = 2020, doy = 200):
 
 # Read with obspy and select channel
 for sta in stations:
@@ -71,14 +69,10 @@ for sta in stations:
     s = s.select(channel = "EH?")
 # time: 37.31 s
 
-
 # Read with PNWstore index
 for sta in stations:
-    s = client.get_waveforms(network = "UW", 
-                          station = sta, 
-                          channel = "EH?", 
-                          year = "2020", 
-                          doy = "200")
+    s = client.get_waveforms(network = "UW", station = sta,  
+                             channel = "EH?",  year = 2020, doy = 200)
 # time: 9.24 s
 ```
 
@@ -88,9 +82,9 @@ from obspy.core.utcdatetime import UTCDateTime
 from pnwstore.station import StationClient
 
 client = StationClient(USERNAME, PASSWORD)
-client.query("*", network = "UW", channel = "EH?",
-            mintime = UTCDateTime("2010-01-15"), 
-            maxtime = UTCDateTime("2000-01-16"), showquery = True)
+client.query(network = "UW", channel = "EH?",
+             mintime = UTCDateTime("2010-01-15"), 
+             maxtime = UTCDateTime("2000-01-16"))
 
 # A pandas DataFrame is returned.
 #    channel_id network station location channel  latitude  longitude elevation  depth     starttime       endtime sampling_rate azimuth 
