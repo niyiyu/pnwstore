@@ -66,6 +66,10 @@ class QuakeClient(object):
                 _qs.append(f"magnitude >= {_i}")
             elif _k == "maxmagnitude":
                 _qs.append(f"magnitude <= {_i}")
+            elif _k in ["source_id", "event_type"]:
+                _qs.append(f"{_k} = '{_i}'")
+            else:
+                print(f"query by {_k} not implement.")
 
         if len(_qs) != 0:
             query_str += " WHERE "
