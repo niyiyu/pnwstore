@@ -186,6 +186,8 @@ create table picks_CONTRIBUTOR (                  \
     microsecond MEDIUMINT NOT NULL,               \
     phase VARCHAR(6) NOT NULL,                    \
     evaluation_mode VARCHAR(10) NOT NULL,         \
+    onset VARCHAR(2),                             \
+    polarity VARCHAR(2),                          \
     uncertainty FLOAT,                            \
     backazimuth FLOAT,                            \
     contributor VARCHAR(6) NOT NULL,              \
