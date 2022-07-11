@@ -65,10 +65,13 @@ class StationClient(object):
                         raise ValueError(f"Unsupported query key <{_k}>: {_i}")
 
             elif isinstance(_i, UTCDateTime):
-                if _k == "mintime":
-                    _q = f"starttime <= {_i.timestamp}"
-                elif _k == "maxtime":
-                    _q = f"endtime >= {_i.timestamp}"
+                if _k == "time":
+                    _q = f"(starttime <= {_i.timestamp + 86400 - 1} AND endtime >= {_i.timestamp})"
+                else:
+                    if _k == "mintime":
+                        _q = f"starttime <= {_i.timestamp}"
+                    elif _k == "maxtime":
+                        _q = f"endtime >= {_i.timestamp}"
                 _qs.append(_q)
             else:
                 raise ValueError(f"Unsupported query key <{_k}>: {_i}")
