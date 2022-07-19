@@ -4,9 +4,10 @@ This is a python-based seismic data query and selection toolbox for users on cas
 ## What data are in pnwstore?
 - mseed data at PNW from 1980 to 2021
 - network metadata from 1980 to 2020
-    - [network list here](./netlist.md)
+    - [network list here](./docs/netlist.md)
 - event metadata and phase information contributed by
     - [University of Washington/Pacific Northwest Seismic Network](https://pnsn.org/pnsn-data-products/earthquake-catalogs) (1980-2020)
+- list of known wrong data could be found [here](./docs/wrong_data.md).
 
 ## Why use this toolbox?
 1. The waveforms stored in `mseed` can be indexed with [mseedindex](https://github.com/iris-edu/mseedindex), which would dramatically improve the efficieny of data stream. This is very useful especailly when you are working on a large amount of data. However, database system, especailly the `sqlite` that mseedindex specifies, can be hard to use sometimes, and the learning curve can be very shallow.
