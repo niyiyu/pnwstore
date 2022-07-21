@@ -1,5 +1,7 @@
 import pandas as pd
-
+import os
+import glob
+from tqdm import tqdm
 
 def year2day(quake_year):
     if quake_year == 2010:
@@ -57,3 +59,10 @@ def rst2df(result, keys=None):
         return pd.DataFrame(result, columns=keys)
     else:
         return pd.DataFrame(result)
+
+
+def index_folder(path, sqlite_path, mseedindex_cmd = 'mseedindex'):
+    for i in tqdm(glob.glob(path + "/**/*", recursive = True)):
+        if not os.path.isdir(i):
+            cmd = " ".join([mseedindex_cmd, i, "-sqlite", sqlite_path])
+            os.system(cmd)
