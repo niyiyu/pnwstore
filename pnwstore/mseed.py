@@ -1,6 +1,7 @@
 import sqlite3
 import obspy
 import io
+import os
 import asyncio
 
 from .utils import *
@@ -95,7 +96,7 @@ class WaveformClient(object):
         else:
             return self._cursor.execute(query_str)
 
-    def get_waveforms(self, headeronly=False, starttime = None, endtime = None, **kwargs):
+    def get_waveforms(self, headeronly=False, starttime = None, endtime = None, filename = None, **kwargs):
         rst = self._query(["byteoffset", "bytes", "filename"], **kwargs)
         s = obspy.Stream()
         for _i in rst:
@@ -106,7 +107,14 @@ class WaveformClient(object):
                 f.seek(byteoffset)
                 buff = io.BytesIO(f.read(byte))
                 s += obspy.read(buff, headeronly=headeronly)
-        return s
+        if filename:
+            try:
+                os.makedirs('/'.join(filename.split('/')[:-1]))
+            except:
+                pass
+            s.write(filename, format = 'mseed')
+        else:
+            return s
 
     def get_waveforms_bulk(self, bulk):
         """
