@@ -22,13 +22,21 @@ def connect_dbs(years):
 
 
 class WaveformClient(object):
-    def __init__(self, year=range(1980, 2022)):
-        if isinstance(year, int):
-            self._db, self._cursor = connect_db(year)
-            self._year = [year]
+    def __init__(self, sqlite = None, filename_mapper = None, year=range(1980, 2022)):
+        if sqlite:
+            self._db = sqlite3.connect(sqlite)
+            self._cursor = self._db.cursor()
         else:
-            self._db, self._cursor = connect_dbs(year)
-            self._year = list(year)
+            if isinstance(year, int):
+                self._db, self._cursor = connect_db(year)
+                self._year = [year]
+            else:
+                self._db, self._cursor = connect_dbs(year)
+                self._year = list(year)
+        if filename_mapper:
+            self._filename_mapper = filename_mapper
+        else:
+            self._filename_mapper = pnwstore_filename_mapper
         self._keys = mseedkeys()
 
     def query_waveforms(self, keys="*", **kwargs):
@@ -96,23 +104,25 @@ class WaveformClient(object):
         else:
             return self._cursor.execute(query_str)
 
-    def get_waveforms(self, headeronly=False, starttime = None, endtime = None, filename = None, **kwargs):
+    def get_waveforms(
+        self, headeronly=False, starttime=None, endtime=None, filename=None, **kwargs
+    ):
         rst = self._query(["byteoffset", "bytes", "filename"], **kwargs)
         s = obspy.Stream()
         for _i in rst:
             byteoffset = _i[0]
             byte = _i[1]
-            seedfile = filename_mapper(_i[2])
+            seedfile = self._filename_mapper(_i[2])
             with open(seedfile, "rb") as f:
                 f.seek(byteoffset)
                 buff = io.BytesIO(f.read(byte))
                 s += obspy.read(buff, headeronly=headeronly)
         if filename:
             try:
-                os.makedirs('/'.join(filename.split('/')[:-1]))
+                os.makedirs("/".join(filename.split("/")[:-1]))
             except:
                 pass
-            s.write(filename, format = 'mseed')
+            s.write(filename, format="mseed")
         else:
             return s
 
