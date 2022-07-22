@@ -19,7 +19,7 @@ def wildcard_mapper(c):
     return c
 
 
-def filename_mapper(filename):
+def pnwstore_filename_mapper(filename):
     return "/1-fnp/pnwstore1/p-" + filename[6:]
 
 def dummy_filename_mapper(filename):
