@@ -3,6 +3,7 @@ import os
 import glob
 from tqdm import tqdm
 
+
 def year2day(quake_year):
     if quake_year == 2010:
         return 8
@@ -20,6 +21,9 @@ def wildcard_mapper(c):
 
 def filename_mapper(filename):
     return "/1-fnp/pnwstore1/p-" + filename[6:]
+
+def dummy_filename_mapper(filename):
+    return filename
 
 
 def dbs_mapper(year):
@@ -61,8 +65,9 @@ def rst2df(result, keys=None):
         return pd.DataFrame(result)
 
 
-def index_folder(path, sqlite_path, mseedindex_cmd = 'mseedindex'):
-    for i in tqdm(glob.glob(path + "/**/*", recursive = True)):
+def index_folder(path, sqlite_path, mseedindex_cmd="mseedindex"):
+    leap_env = "LIBMSEED_LEAPSECOND_FILE=../leap-seconds.list"
+    for i in tqdm(glob.glob(path + "/**/*", recursive=True)):
         if not os.path.isdir(i):
-            cmd = " ".join([mseedindex_cmd, i, "-sqlite", sqlite_path])
+            cmd = " ".join([leap_env, mseedindex_cmd, i, "-sqlite", sqlite_path])
             os.system(cmd)
