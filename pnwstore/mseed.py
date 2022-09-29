@@ -116,7 +116,11 @@ class WaveformClient(object):
             with open(seedfile, "rb") as f:
                 f.seek(byteoffset)
                 buff = io.BytesIO(f.read(byte))
-                s += obspy.read(buff, headeronly=headeronly, starttime=starttime, endtime=endtime)
+                try:
+                    s += obspy.read(buff, headeronly=headeronly, starttime=starttime, endtime=endtime)
+                except:
+                    s += obspy.read(buff, headeronly=headeronly).trim(starttime=starttime, endtime=endtime)
+                    
         if filename:
             try:
                 os.makedirs("/".join(filename.split("/")[:-1]))
