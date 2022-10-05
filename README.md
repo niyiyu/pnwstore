@@ -1,12 +1,12 @@
-# PNWstore: Pacific NorthWest Storage
+# PNWstore: Pacific Northwest Storage
 This is a python-based seismic data query and selection toolbox for users on cascadia.ess.washington.edu.
 
 ## What data are in pnwstore?
-- mseed data at PNW from 1980 to 2021
-- network metadata from 1980 to 2020
+- mseed data at PNW (1980 - 2021)
+- network metadata (1980 - 2021)
     - [network list here](./docs/netlist.md)
-- event metadata and phase information contributed by
-    - [University of Washington/Pacific Northwest Seismic Network](https://pnsn.org/pnsn-data-products/earthquake-catalogs) (1980-2020)
+- earthquake catalog contributed by
+    - [University of Washington/Pacific Northwest Seismic Network](https://pnsn.org/pnsn-data-products/earthquake-catalogs) (1980-2021)
 - list of known wrong data could be found [here](./docs/wrong_data.md).
 
 ## Why use this toolbox?
