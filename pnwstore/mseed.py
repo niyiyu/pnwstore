@@ -76,6 +76,8 @@ class WaveformClient(object):
         query_str += " FROM tsindex"
         _qs = []
         for _k, _i in kwargs.items():
+            if _k == "location" and _i == "--":
+                _i = ""
             if "_" in _i or "%" in _i or "-" in _i:
                 raise ValueError("Only wildcards ? and * are supported.")
             else:
