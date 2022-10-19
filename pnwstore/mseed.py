@@ -109,6 +109,12 @@ class WaveformClient(object):
     def get_waveforms(
         self, headeronly=False, starttime=None, endtime=None, filename=None, **kwargs
     ):
+        if starttime and endtime:
+            if (starttime.year == endtime.year) and (starttime.julday == endtime.julday):
+                kwargs['year'] = starttime.year
+                kwargs['doy'] = starttime.julday
+            else:
+                raise NotImplementedError("Multi-day streaming not implemented.\nStart/end time should be in the same day.")
         rst = self._query(["byteoffset", "bytes", "filename"], **kwargs)
         s = obspy.Stream()
         for _i in rst:
