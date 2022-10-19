@@ -22,7 +22,7 @@ def connect_dbs(years):
 
 
 class WaveformClient(object):
-    def __init__(self, sqlite = None, filename_mapper = None, year=range(1980, 2022)):
+    def __init__(self, sqlite=None, filename_mapper=None, year=range(1980, 2022)):
         if sqlite:
             self._db = sqlite3.connect(sqlite)
             self._cursor = self._db.cursor()
@@ -110,11 +110,15 @@ class WaveformClient(object):
         self, headeronly=False, starttime=None, endtime=None, filename=None, **kwargs
     ):
         if starttime and endtime:
-            if (starttime.year == endtime.year) and (starttime.julday == endtime.julday):
-                kwargs['year'] = starttime.year
-                kwargs['doy'] = starttime.julday
+            if (starttime.year == endtime.year) and (
+                starttime.julday == endtime.julday
+            ):
+                kwargs["year"] = starttime.year
+                kwargs["doy"] = starttime.julday
             else:
-                raise NotImplementedError("Multi-day streaming not implemented.\nStart/end time should be in the same day.")
+                raise NotImplementedError(
+                    "Multi-day streaming not implemented.\nStart/end time should be in the same day."
+                )
         rst = self._query(["byteoffset", "bytes", "filename"], **kwargs)
         s = obspy.Stream()
         for _i in rst:
@@ -125,10 +129,17 @@ class WaveformClient(object):
                 f.seek(byteoffset)
                 buff = io.BytesIO(f.read(byte))
                 try:
-                    s += obspy.read(buff, headeronly=headeronly, starttime=starttime, endtime=endtime)
+                    s += obspy.read(
+                        buff,
+                        headeronly=headeronly,
+                        starttime=starttime,
+                        endtime=endtime,
+                    )
                 except:
-                    s += obspy.read(buff, headeronly=headeronly).trim(starttime=starttime, endtime=endtime)
-                    
+                    s += obspy.read(buff, headeronly=headeronly).trim(
+                        starttime=starttime, endtime=endtime
+                    )
+
         if filename:
             try:
                 os.makedirs("/".join(filename.split("/")[:-1]))
