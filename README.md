@@ -1,5 +1,5 @@
 # PNWstore: Pacific Northwest Storage
-This is a python-based seismic data query and selection toolbox for users on cascadia.ess.washington.edu.
+This is a python-based seismic data query and selection toolbox for [Denolle-lab](https://denolle-lab.github.io) members.
 
 ## What data are in pnwstore?
 - mseed data at PNW (1980 - 2021)
