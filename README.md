@@ -3,15 +3,16 @@ This is a python-based seismic data query and selection toolbox for [Denolle-lab
 
 ## What data are in pnwstore?
 - mseed data at PNW (1980 - 2021)
-- network metadata (1980 - 2021)
+- network metadata (1980 - 2022)
     - [network list here](./docs/netlist.md)
 - earthquake catalog contributed by
-    - [University of Washington/Pacific Northwest Seismic Network](https://pnsn.org/pnsn-data-products/earthquake-catalogs) (1980-2021)
+    - [University of Washington/Pacific Northwest Seismic Network](https://pnsn.org/pnsn-data-products/earthquake-catalogs) (1980-2022)
 - list of known wrong data could be found [here](./docs/wrong_data.md).
 
 ## Why use this toolbox?
-1. The waveforms stored in `mseed` can be indexed with [mseedindex](https://github.com/iris-edu/mseedindex), which would dramatically improve the efficieny of data stream. This is very useful especailly when you are working on a large amount of data. However, database system, especailly the `sqlite` that mseedindex specifies, can be hard to use sometimes, and the learning curve can be very shallow.
-2. Although `xml` files contain all information of events and/or seismic networks, extra costs in codes and parsing time may not be ignored.
+1. The waveforms stored in `mseed` can be indexed with [mseedindex](https://github.com/iris-edu/mseedindex), which would dramatically improve the efficieny of data streaming. This is very useful especailly when you are working on a large amount of data.
+2. Although `xml` files contain all information of events and/or seismic networks, extra costs in codes and parsing time may not be ignored especially in reading and parsing complex XML files. It's better to extract key informations and index them in a database system.
+3. The pnwstore client (is trying to) emulate ObsPy FDSN client so that transition from using IRIS to the local data requires very little changes to the codes.
 
 
 ## Usage
@@ -60,9 +61,9 @@ from pnwstore.mseed import WaveformClient
 
 client = WaveformClient()
 
-# Query all stations with channel EH? from UW network at year 2020 and doy 200.
-for item in client.query(keys = 'distinct station', network = "UW", 
-                         channel = "EH?", year = 2020, doy = 200):
+# Query all stations with channel EH? from UW network at on Feburary 18th, 2020.
+client.query(keys = 'distinct station', network = "UW", 
+             channel = "EH?", year = 2020, month = 2, day = 18):
 
 # Read with obspy and select channel
 for sta in stations:
@@ -73,7 +74,7 @@ for sta in stations:
 # Read with PNWstore index
 for sta in stations:
     s = client.get_waveforms(network = "UW", station = sta,  
-                             channel = "EH?",  year = 2020, doy = 200)
+                             channel = "EH?", year = 2020, month = 2, day = 18)
 # time: 9.24 s
 ```
 
@@ -132,6 +133,7 @@ create table catalog (                             \
     longitude FLOAT NOT NULL,                      \
     depth FLOAT NOT NULL,                          \
     magnitude FLOAT NOT NULL,                      \
+    magnitude_type VARCHAR(2) NOT NULL,            \
     contributor VARCHAR(4) NOT NULL,               \
     number_of_pick SMALLINT NOT NULL,              \
     PRIMARY KEY (source_id)                        \
