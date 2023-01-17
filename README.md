@@ -1,4 +1,6 @@
 # PNWstore: Pacific Northwest Storage
+[![DOI](https://zenodo.org/badge/479659348.svg)](https://zenodo.org/badge/latestdoi/479659348) 
+
 This is a python-based seismic data query and selection toolbox for [Denolle-lab](https://denolle-lab.github.io) members.
 
 ## What data are in pnwstore?
