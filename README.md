@@ -1,5 +1,5 @@
 # PNWstore: Pacific Northwest Storage
-[![DOI](https://zenodo.org/badge/479659348.svg)](https://zenodo.org/badge/latestdoi/479659348) 
+[![DOI](https://zenodo.org/badge/479659348.svg)](https://zenodo.org/badge/latestdoi/479659348) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This is a python-based seismic data query and selection toolbox for [Denolle-lab](https://denolle-lab.github.io) members.
 
@@ -65,7 +65,7 @@ client = WaveformClient()
 
 # Query all stations with channel EH? from UW network at on Feburary 18th, 2020.
 client.query(keys = 'distinct station', network = "UW", 
-             channel = "EH?", year = 2020, month = 2, day = 18):
+             channel = "EH?", year = 2020, month = 2, day = 18)
 
 # Read with obspy and select channel
 for sta in stations:
