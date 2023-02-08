@@ -60,24 +60,12 @@ client.query(network = "UW", station = "SHW", phase = "P*",
 ### Query and select stream
 ```python
 from pnwstore.mseed import WaveformClient
-
 client = WaveformClient()
 
-# Query all stations with channel EH? from UW network at on Feburary 18th, 2020.
-client.query(keys = 'distinct station', network = "UW", 
-             channel = "EH?", year = 2020, month = 2, day = 18)
-
-# Read with obspy and select channel
-for sta in stations:
-    s = obspy.read(filename_mapper(sta))
-    s = s.select(channel = "EH?")
-# time: 37.31 s
-
-# Read with PNWstore index
-for sta in stations:
-    s = client.get_waveforms(network = "UW", station = sta,  
-                             channel = "EH?", year = 2020, month = 2, day = 18)
-# time: 9.24 s
+s = client.get_waveforms(network = "UW", station = "SHW",  
+                         channel = "EH?", year = 2020,
+                         starttime = utc("20200101T00:00:00"), 
+                         endtime   = utc("20200101T01:00:00"))
 ```
 
 ### Query network meta
