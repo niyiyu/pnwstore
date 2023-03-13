@@ -7,6 +7,10 @@ from tqdm import tqdm
 def year2day(quake_year):
     if quake_year == 2010:
         return 8
+    elif quake_year == 2017:
+        return 7
+    elif quake_year == 2022:
+        return 3
     else:
         return abs(quake_year - 2031) % 11
 
