@@ -22,7 +22,7 @@ def connect_dbs(years):
 
 
 class WaveformClient(object):
-    def __init__(self, sqlite=None, filename_mapper=None, year=range(1980, 2022)):
+    def __init__(self, sqlite=None, filename_mapper=None, year=range(1980, 2023)):
         if sqlite:
             self._db = sqlite3.connect(sqlite)
             self._cursor = self._db.cursor()

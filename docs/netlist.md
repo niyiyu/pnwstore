@@ -43,6 +43,7 @@
 |  2019  |   C8, CC, CN, GS, IM, IU, NP, NV, OO, PB, RE, SB, TA, UO, US, UW, ZK  | 8.5TB |
 |  2020  |   C8, CC, CN, GM, GS, IM, IU, NP, NV, OO, PB, RE, SB, TA, UI, UO, US, UW, ZK  | 9.2TB |
 |  2021  |   AM, CC, CN, GS, IM, IU, NP, NV, OO, PB, RE, SB, UI, UO, US, UW | 12TB |
+|  2022  |   AM, C8, CC, CN, GS, IM, IU, NP, NV, OO, PB, UI, UO, US, UW | 13TB |
 
 
 ## Networks meta
