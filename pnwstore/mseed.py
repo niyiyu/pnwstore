@@ -2,7 +2,8 @@ import sqlite3
 import obspy
 import io
 import os
-import asyncio
+
+from obspy.core.utcdatetime import UTCDateTime
 
 from .utils import *
 
@@ -110,6 +111,10 @@ class WaveformClient(object):
         self, headeronly=False, starttime=None, endtime=None, filename=None, **kwargs
     ):
         if starttime and endtime:
+            if isinstance(starttime, str):
+                starttime = UTCDateTime(starttime)
+            if isinstance(endtime, str):
+                endtime = UTCDateTime(endtime)
             if (starttime.year == endtime.year) and (
                 starttime.julday == endtime.julday
             ):
