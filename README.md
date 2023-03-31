@@ -16,8 +16,17 @@ This is a python-based seismic data query and selection toolbox for [Denolle-lab
 2. Although `xml` files contain all information of events and/or seismic networks, extra costs in codes and parsing time may not be ignored especially in reading and parsing complex XML files. It's better to extract key informations and index them in a database system.
 3. The pnwstore client (is trying to) emulate ObsPy FDSN client so that transition from using IRIS to the local data requires very little changes to the codes.
 
-
 ## Usage
+### Query and select stream
+```python
+from pnwstore.mseed import WaveformClient
+client = WaveformClient()
+
+s = client.get_waveforms(network = "UW", station = "SHW", channel = "EH?",
+                         starttime = "20200101T00:00:00", 
+                         endtime   = "20200101T01:00:00")
+```
+
 ### Query earthquake catalog
 ```python
 from obspy.core.utcdatetime import UTCDateTime
@@ -55,17 +64,6 @@ client.query(network = "UW", station = "SHW", phase = "P*",
 # 0 1133412  uw10485733      UW     SHW       --     EHZ  947343000.0  2000   1    8    8    14      57      23       680000     P          manual   0.05         79.0          UW
 # 1 1133508  uw10485213      UW     SHW       --     EHZ  947142000.0  2000   1    6    6     6      52      56       790000     P          manual   0.08         63.6          UW 
 # 2 1133612  uw10484688      UW     SHW       --     EHZ  946890000.0  2000   1    3    3     9       0      14       280000     P          manual   0.22        222.1          UW 
-```
-
-### Query and select stream
-```python
-from pnwstore.mseed import WaveformClient
-client = WaveformClient()
-
-s = client.get_waveforms(network = "UW", station = "SHW",  
-                         channel = "EH?", year = 2020,
-                         starttime = utc("20200101T00:00:00"), 
-                         endtime   = utc("20200101T01:00:00"))
 ```
 
 ### Query network meta

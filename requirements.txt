@@ -1,4 +1,3 @@
 obspy
 pandas
 mysql-connector-python
-tqdm
