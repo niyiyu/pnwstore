@@ -31,8 +31,19 @@ def dummy_filename_mapper(filename):
     return filename
 
 
+def sqlite_base():
+    import socket
+
+    sqlite_mapper = {
+        "cascadia.ess.washington.edu": "/data/wsd01/PNWstore_sqlite/",
+        "siletzia.ess.washington.edu": "/fd1/yiyu_data/PNWstore_sqlite/",
+        "marine1.ess.washington.edu": "/mnt/DATA0/PNWstore_sqlite/",
+    }
+    return sqlite_mapper[socket.gethostname()]
+
+
 def dbs_mapper(year):
-    sqlite_path = "/data/wsd01/PNWstore_sqlite/"
+    sqlite_path = sqlite_base()
     return sqlite_path + "%d.sqlite" % year
 
 
