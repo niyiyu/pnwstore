@@ -3,10 +3,8 @@ import obspy
 import io
 import os
 
-from obspy.core.utcdatetime import UTCDateTime
-
-from .utils import *
-
+from .utils import dbs_mapper, pnwstore_filename_mapper, rst2df, wildcard_mapper
+from .constants import mseedkeys
 
 def connect_db(year):
     db = sqlite3.connect(dbs_mapper(year))
@@ -38,7 +36,7 @@ class WaveformClient(object):
             self._filename_mapper = filename_mapper
         else:
             self._filename_mapper = pnwstore_filename_mapper
-        self._keys = mseedkeys()
+        self._keys = mseedkeys
 
     def query_waveforms(self, keys="*", **kwargs):
         rst = self._query(keys, **kwargs)
@@ -56,7 +54,7 @@ class WaveformClient(object):
         if "doy" in kwargs:
             kwargs["doy"] = str(kwargs["doy"]).zfill(3)
         elif "month" in kwargs and "day" in kwargs:
-            t = obspy.core.utcdatetime.UTCDateTime(
+            t = obspy.UTCDateTime(
                 f'{kwargs["year"]}-{kwargs["month"]}-{kwargs["day"]}'
             )
             kwargs["doy"] = str(t.julday).zfill(3)
@@ -112,9 +110,9 @@ class WaveformClient(object):
     ):
         if starttime and endtime:
             if isinstance(starttime, str):
-                starttime = UTCDateTime(starttime)
+                starttime = obspy.UTCDateTime(starttime)
             if isinstance(endtime, str):
-                endtime = UTCDateTime(endtime)
+                endtime = obspy.UTCDateTime(endtime)
             if (starttime.year == endtime.year) and (
                 starttime.julday == endtime.julday
             ):

@@ -1,7 +1,7 @@
+import obspy
 import mysql.connector
-from obspy.core.utcdatetime import UTCDateTime
 
-from .utils import *
+from .utils import rst2df, wildcard_mapper
 
 
 class QuakeClient(object):
@@ -39,15 +39,15 @@ class QuakeClient(object):
         _qs = []
         for _k, _i in kwargs.items():
             if _k == "mintime":
-                if isinstance(_i, UTCDateTime):
+                if isinstance(_i, obspy.UTCDateTime):
                     _qs.append(f"timestamp >= {_i.timestamp}")
                 else:
-                    _qs.append(f"timestamp >= {UTCDateTime(_i).timestamp}")
+                    _qs.append(f"timestamp >= {obspy.UTCDateTime(_i).timestamp}")
             elif _k == "maxtime":
-                if isinstance(_i, UTCDateTime):
+                if isinstance(_i, obspy.UTCDateTime):
                     _qs.append(f"timestamp <= {_i.timestamp}")
                 else:
-                    _qs.append(f"timestamp <= {UTCDateTime(_i).timestamp}")
+                    _qs.append(f"timestamp <= {obspy.UTCDateTime(_i).timestamp}")
             elif _k == "contributor":
                 _qs.append(f"contributor = '{_i}'")
             elif _k == "minlatitude":
@@ -160,7 +160,7 @@ class PickClient(object):
                     else:
                         raise ValueError(f"Unsupported query key <{_k}>: {_i}")
 
-            elif isinstance(_i, UTCDateTime):
+            elif isinstance(_i, obspy.UTCDateTime):
                 if _k == "mintime":
                     _q = f"timestamp >= {_i.timestamp}"
                 elif _k == "maxtime":

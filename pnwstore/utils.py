@@ -2,18 +2,9 @@ import pandas as pd
 import os
 import glob
 from tqdm import tqdm
+import socket
 
-
-def year2day(quake_year):
-    if quake_year == 2010:
-        return 8
-    elif quake_year == 2017:
-        return 7
-    elif quake_year == 2022:
-        return 3
-    else:
-        return abs(quake_year - 2031) % 11
-
+from .constants import wd_mapper, sqlite_mapper
 
 def wildcard_mapper(c):
     if "*" in c:
@@ -24,7 +15,8 @@ def wildcard_mapper(c):
 
 
 def pnwstore_filename_mapper(filename):
-    return "/auto/pnwstore1-" + filename[6:]
+    year = int(filename.split("/")[5])
+    return "/auto/pnwstore1-" + wd_mapper[year] + filename[10:]
 
 
 def dummy_filename_mapper(filename):
@@ -32,45 +24,12 @@ def dummy_filename_mapper(filename):
 
 
 def sqlite_base():
-    import socket
-
-    sqlite_mapper = {
-        "cascadia.ess.washington.edu": "/data/wsd01/PNWstore_sqlite/",
-        "siletzia.ess.washington.edu": "/fd1/yiyu_data/PNWstore_sqlite/",
-        "marine1.ess.washington.edu": "/mnt/DATA0/PNWstore_sqlite/",
-        "psf-nvme01-prd-j375.ess.washington.edu": "/wd1/PNWstore_sqlite/"
-    }
     return sqlite_mapper[socket.gethostname()]
 
 
 def dbs_mapper(year):
     sqlite_path = sqlite_base()
     return sqlite_path + "%d.sqlite" % year
-
-
-def mseedkeys():
-    return [
-        "network",
-        "station",
-        "location",
-        "channel",
-        "quality",
-        "version",
-        "starttime",
-        "endtime",
-        "samplerate",
-        "filename",
-        "byteoffset",
-        "bytes",
-        "hash",
-        "timeindex",
-        "timespans",
-        "timerates",
-        "format",
-        "filemodtime",
-        "updated",
-        "scanned",
-    ]
 
 
 def rst2df(result, keys=None):

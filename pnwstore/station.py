@@ -1,7 +1,7 @@
+import obspy
 import mysql.connector
-from obspy.core.utcdatetime import UTCDateTime
 
-from .utils import *
+from .utils import wildcard_mapper, rst2df
 
 
 class StationClient(object):
@@ -64,7 +64,7 @@ class StationClient(object):
                     else:
                         raise ValueError(f"Unsupported query key <{_k}>: {_i}")
 
-            elif isinstance(_i, UTCDateTime):
+            elif isinstance(_i, obspy.UTCDateTime):
                 if _k == "time":
                     _q = f"(starttime <= {_i.timestamp + 86400 - 1} AND endtime >= {_i.timestamp})"
                 else:
