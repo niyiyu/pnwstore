@@ -1,7 +1,7 @@
-import obspy
 import mysql.connector
+import obspy
 
-from .utils import wildcard_mapper, rst2df
+from .utils import rst2df, wildcard_mapper
 
 
 class StationClient(object):

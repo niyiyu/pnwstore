@@ -1,10 +1,12 @@
-import pandas as pd
-import os
 import glob
-from tqdm import tqdm
+import os
 import socket
 
-from .constants import wd_mapper, sqlite_mapper
+import pandas as pd
+from tqdm import tqdm
+
+from .constants import sqlite_mapper, wd_mapper
+
 
 def wildcard_mapper(c):
     if "*" in c:

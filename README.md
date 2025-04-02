@@ -23,7 +23,7 @@ from pnwstore.mseed import WaveformClient
 client = WaveformClient()
 
 s = client.get_waveforms(network = "UW", station = "SHW", channel = "EH?",
-                         starttime = "20200101T00:00:00", 
+                         starttime = "20200101T00:00:00",
                          endtime   = "20200101T01:00:00")
 ```
 
@@ -34,8 +34,8 @@ from pnwstore.catalog import QuakeClient
 
 client = QuakeClient(USERNAME, PASSWORD)
 
-client.query(mintime = UTCDateTime("1980-01-01T00:00:00"),  
-             maxtime = UTCDateTime("2021-01-01T00:00:00"), 
+client.query(mintime = UTCDateTime("1980-01-01T00:00:00"),
+             maxtime = UTCDateTime("2021-01-01T00:00:00"),
              minlatitude = 40,    maxlatitude = 50,
              minlongitude = -128, maxlongitude = -120,
              minmagnitude = 5.9)
@@ -56,14 +56,14 @@ from pnwstore.catalog import PickClient
 client = PickClient(USERNAME, PASSWORD)
 
 client.query(network = "UW", station = "SHW", phase = "P*",
-             mintime = UTCDateTime("2000-01-01"), 
+             mintime = UTCDateTime("2000-01-01"),
              maxtime = UTCDateTime("2000-01-10"))
 
 # A pandas DataFrame is returned.
-#   pick_id   source_id network station location channel    timestamp  year month day doy  hour  minute  second  microsecond phase evaluation_mode uncertainty  backazimuth contributor 
+#   pick_id   source_id network station location channel    timestamp  year month day doy  hour  minute  second  microsecond phase evaluation_mode uncertainty  backazimuth contributor
 # 0 1133412  uw10485733      UW     SHW       --     EHZ  947343000.0  2000   1    8    8    14      57      23       680000     P          manual   0.05         79.0          UW
-# 1 1133508  uw10485213      UW     SHW       --     EHZ  947142000.0  2000   1    6    6     6      52      56       790000     P          manual   0.08         63.6          UW 
-# 2 1133612  uw10484688      UW     SHW       --     EHZ  946890000.0  2000   1    3    3     9       0      14       280000     P          manual   0.22        222.1          UW 
+# 1 1133508  uw10485213      UW     SHW       --     EHZ  947142000.0  2000   1    6    6     6      52      56       790000     P          manual   0.08         63.6          UW
+# 2 1133612  uw10484688      UW     SHW       --     EHZ  946890000.0  2000   1    3    3     9       0      14       280000     P          manual   0.22        222.1          UW
 ```
 
 ### Query network meta
@@ -73,19 +73,19 @@ from pnwstore.station import StationClient
 
 client = StationClient(USERNAME, PASSWORD)
 client.query(network = "UW", channel = "EH?",
-             mintime = UTCDateTime("2010-01-15"), 
+             mintime = UTCDateTime("2010-01-15"),
              maxtime = UTCDateTime("2000-01-16"))
 
 # A pandas DataFrame is returned.
-#    channel_id network station location channel  latitude  longitude elevation  depth     starttime       endtime sampling_rate azimuth 
+#    channel_id network station location channel  latitude  longitude elevation  depth     starttime       endtime sampling_rate azimuth
 # 0       45376      UW     SHW       --     EHZ   46.1935   -122.236   1425.00   0.00   867283200.0  1207008000.0      100.0000    None
-# 1       45377      UW     SHW       --     EHZ   46.1935   -122.236   1425.00   0.00  1207008000.0  1536105600.0      100.0000    None  
+# 1       45377      UW     SHW       --     EHZ   46.1935   -122.236   1425.00   0.00  1207008000.0  1536105600.0      100.0000    None
 ```
 
 
 ## Database schema
 PNWstore uses mysql to index all seismic data. Below are the schemas for each table.
-### network schema 
+### network schema
 ```mysql
 create table network (                             \
     channel_id MEDIUMINT NOT NULL AUTO_INCREMENT,  \
@@ -158,7 +158,7 @@ create table mseed_YYYY (                         \
 
 ### pick schema
 Note that each contributor relates to an individual table.
-```mysql 
+```mysql
 create table picks_CONTRIBUTOR (                  \
     pick_id INT NOT NULL AUTO_INCREMENT,          \
     source_id VARCHAR(10) NOT NULL,               \

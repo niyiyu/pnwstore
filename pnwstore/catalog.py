@@ -1,5 +1,5 @@
-import obspy
 import mysql.connector
+import obspy
 
 from .utils import rst2df, wildcard_mapper
 

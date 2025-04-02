@@ -48,7 +48,7 @@ sqlite_mapper = {
     "cascadia.ess.washington.edu": "/data/wsd01/PNWstore_sqlite/",
     "siletzia.ess.washington.edu": "/fd1/yiyu_data/PNWstore_sqlite/",
     "marine1.ess.washington.edu": "/mnt/DATA0/PNWstore_sqlite/",
-    "psf-nvme01-prd-j375.ess.washington.edu": "/wd1/PNWstore_sqlite/"
+    "psf-nvme01-prd-j375.ess.washington.edu": "/wd1/PNWstore_sqlite/",
 }
 
 mseedkeys = [

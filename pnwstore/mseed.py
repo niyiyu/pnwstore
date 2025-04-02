@@ -1,10 +1,12 @@
-import sqlite3
-import obspy
 import io
 import os
+import sqlite3
 
-from .utils import dbs_mapper, pnwstore_filename_mapper, rst2df, wildcard_mapper
+import obspy
+
 from .constants import mseedkeys
+from .utils import dbs_mapper, pnwstore_filename_mapper, rst2df, wildcard_mapper
+
 
 def connect_db(year):
     db = sqlite3.connect(dbs_mapper(year))
@@ -54,9 +56,7 @@ class WaveformClient(object):
         if "doy" in kwargs:
             kwargs["doy"] = str(kwargs["doy"]).zfill(3)
         elif "month" in kwargs and "day" in kwargs:
-            t = obspy.UTCDateTime(
-                f'{kwargs["year"]}-{kwargs["month"]}-{kwargs["day"]}'
-            )
+            t = obspy.UTCDateTime(f'{kwargs["year"]}-{kwargs["month"]}-{kwargs["day"]}')
             kwargs["doy"] = str(t.julday).zfill(3)
             del kwargs["month"], kwargs["day"]
         else:
