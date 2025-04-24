@@ -42,6 +42,7 @@ wd_mapper = {
     2020: "wd00",
     2021: "wd10",
     2022: "wd03",
+    2023: "wd09",
 }
 
 sqlite_mapper = {
