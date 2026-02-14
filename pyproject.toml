@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+authors = [{name = "Yiyu Ni", email = "niyiyu@uw.edu"}]
+name = "project"
+version = "0.1.0"
+dependencies = [
+    "obspy",
+    "pandas",
+    "mysql-connector-python",
+]
+
+[tool.setuptools.packages.find]
+where = ["pnwstore"]
