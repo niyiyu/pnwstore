@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 authors = [{name = "Yiyu Ni", email = "niyiyu@uw.edu"}]
-name = "project"
+name = "pnwstore"
 version = "0.1.0"
 dependencies = [
     "obspy",
