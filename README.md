@@ -9,28 +9,30 @@ This is a python-based seismic data query and selection toolbox for [Denolle-lab
     - [network list here](./docs/netlist.md)
 - earthquake catalog contributed by
     - [University of Washington/Pacific Northwest Seismic Network](https://pnsn.org/pnsn-data-products/earthquake-catalogs) (1980-2022)
-- list of known wrong data could be found [here](./docs/wrong_data.md).
+- list of known data issues could be found [here](./docs/data_issue.md).
 
-## Why use this toolbox?
-1. The waveforms stored in `mseed` can be indexed with [mseedindex](https://github.com/iris-edu/mseedindex), which would dramatically improve the efficieny of data streaming. This is very useful especailly when you are working on a large amount of data.
-2. Although `xml` files contain all information of events and/or seismic networks, extra costs in codes and parsing time may not be ignored especially in reading and parsing complex XML files. It's better to extract key informations and index them in a database system.
-3. The pnwstore client (is trying to) emulate ObsPy FDSN client so that transition from using IRIS to the local data requires very little changes to the codes.
+## Why use this package?
+1. The waveforms stored in `mseed` are indexed with [mseedindex](https://github.com/iris-edu/mseedindex), which would dramatically improve data loading efficiency. This is very useful especially when working with large amounts of data.
+2. `xml` files contain all events and station metadata, but loading and parsing them requires extra time. It is recommended to extract key informations and index them in a database system.
+3. The pnwstore client emulates the ObsPy FDSN client so that transition to the local data requires little changes to the codebase.
 
 ## Usage
 ### Query and select stream
 ```python
-from pnwstore.mseed import WaveformClient
+from obspy import UTCDateTime
+from pnwstore import WaveformClient
 client = WaveformClient()
 
-s = client.get_waveforms(network = "UW", station = "SHW", channel = "EH?",
-                         starttime = "20200101T00:00:00",
-                         endtime   = "20200101T01:00:00")
+starttime = UTCDateTime("2020-01-01T00:00:00")
+endtime = starttime + 3600
+s = client.get_waveforms(network="UW", station="SHW", channel="EH?",
+                         starttime=starttime, endtime=endtime)
 ```
 
 ### Query earthquake catalog
 ```python
-from obspy.core.utcdatetime import UTCDateTime
-from pnwstore.catalog import EventClient
+from obspy import UTCDateTime
+from pnwstore import EventClient
 
 client = EventClient(USERNAME, PASSWORD)
 
@@ -50,8 +52,8 @@ client.query(mintime = UTCDateTime("1980-01-01T00:00:00"),
 
 ### Query phase picks
 ```python
-from obspy.core.utcdatetime import UTCDateTime
-from pnwstore.catalog import PickClient
+from obspy import UTCDateTime
+from pnwstore import PickClient
 
 client = PickClient(USERNAME, PASSWORD)
 
@@ -68,8 +70,8 @@ client.query(network = "UW", station = "SHW", phase = "P*",
 
 ### Query network meta
 ```python
-from obspy.core.utcdatetime import UTCDateTime
-from pnwstore.station import StationClient
+from obspy import UTCDateTime
+from pnwstore import StationClient
 
 client = StationClient(USERNAME, PASSWORD)
 client.query(network = "UW", channel = "EH?",
@@ -82,7 +84,7 @@ client.query(network = "UW", channel = "EH?",
 # 1       45377      UW     SHW       --     EHZ   46.1935   -122.236   1425.00   0.00  1207008000.0  1536105600.0      100.0000    None
 ```
 
-
+---
 ## Database schema
 PNWstore uses mysql to index all seismic data. Below are the schemas for each table.
 ### network schema
