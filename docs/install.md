@@ -1,7 +1,6 @@
 # Installation
 
-## Installation
-The project is not available on PyPI yet, so you will need to clone the repository and install it manually. 
+The project is not available on PyPI yet, so you will need to clone the repository and install it manually.
 
 ```python
 git clone https://github.com/Denolle/pnwstore.git

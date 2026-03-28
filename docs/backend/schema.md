@@ -1,5 +1,5 @@
 ## Database Schema
-PNWstore uses mysql to index all seismic data. Below are the schemas for each table.
+pnwstore1.ess.washington.edu runs the mysql server that hosts the `PNW` database. A username and password are required to access the database. Below are the schemas for the three main tables in the database: `network`, `catalog`, and `mseed`. The `picks` table is also included, but note that there are multiple tables for picks, each corresponding to a different contributor.
 
 ### Network Schema
 ```mysql
