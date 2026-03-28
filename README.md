@@ -30,9 +30,9 @@ s = client.get_waveforms(network = "UW", station = "SHW", channel = "EH?",
 ### Query earthquake catalog
 ```python
 from obspy.core.utcdatetime import UTCDateTime
-from pnwstore.catalog import QuakeClient
+from pnwstore.catalog import EventClient
 
-client = QuakeClient(USERNAME, PASSWORD)
+client = EventClient(USERNAME, PASSWORD)
 
 client.query(mintime = UTCDateTime("1980-01-01T00:00:00"),
              maxtime = UTCDateTime("2021-01-01T00:00:00"),

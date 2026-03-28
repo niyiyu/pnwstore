@@ -1,3 +1,3 @@
-from .catalog import PickClient, QuakeClient
+from .catalog import EventClient, PickClient
 from .mseed import WaveformClient
 from .station import StationClient

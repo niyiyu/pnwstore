@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Any, Sequence
+
 import mysql.connector
 import obspy
 
@@ -7,17 +11,19 @@ from .utils import rst2df, wildcard_mapper
 class StationClient(object):
     def __init__(
         self,
-        user,
-        password,
-        host="pnwstore1.ess.washington.edu",
-        database="PNW",
+        user: str,
+        password: str,
+        host: str = "pnwstore1.ess.washington.edu",
+        database: str = "PNW",
     ):
         self._db = mysql.connector.connect(
             host=host, user=user, password=password, database=database
         )
         self._cursor = self._db.cursor()
 
-    def query(self, keys="*", showquery=False, **kwargs):
+    def query(
+        self, keys: str | Sequence[str] = "*", showquery: bool = False, **kwargs: Any
+    ):
         if hasattr(self, "_keys"):
             pass
         else:

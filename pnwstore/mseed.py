@@ -1,53 +1,119 @@
+from __future__ import annotations
+
 import io
+import logging
 import os
 import sqlite3
+from typing import Any, Callable, Iterable, Sequence
 
 import obspy
+from texttable import Texttable
 
-from .constants import mseedkeys
+from .constants import mseedkeys, wd_mapper
 from .utils import dbs_mapper, pnwstore_filename_mapper, rst2df, wildcard_mapper
 
-
-def connect_db(year):
-    db = sqlite3.connect(dbs_mapper(year))
-    return db, db.cursor()
+logging.basicConfig(level=logging.INFO, format="PNWstore | %(levelname)s | %(message)s")
+logger = logging.getLogger(__name__)
 
 
-def connect_dbs(years):
+def connect_db(year: int):
+    path = dbs_mapper(year)
+    db = sqlite3.connect(path)
+    return db, db.cursor(), path
+
+
+def connect_dbs(years: Iterable[int]):
     dbs = {}
     curs = {}
-    for _y in years:
-        dbs[_y] = sqlite3.connect(dbs_mapper(_y))
-        curs[str(_y)] = dbs[_y].cursor()
-    return dbs, curs
+    paths = {}
+    for year in years:
+        dbs[year], curs[str(year)], paths[year] = connect_db(year)
+    return dbs, curs, paths
 
 
 class WaveformClient(object):
-    def __init__(self, sqlite=None, filename_mapper=None, year=range(1980, 2024)):
+    def __init__(
+        self,
+        sqlite: str | None = None,
+        filename_mapper: Callable[[str], str] | None = None,
+        year: int | Iterable[int] = range(1980, 2024),
+    ):
+        self._sqlite = sqlite
         if sqlite:
             self._db = sqlite3.connect(sqlite)
             self._cursor = self._db.cursor()
+            self._sqlite = sqlite
         else:
             if isinstance(year, int):
-                self._db, self._cursor = connect_db(year)
+                self._db, self._cursor, self._sqlite = connect_db(year)
                 self._year = [year]
             else:
-                self._db, self._cursor = connect_dbs(year)
+                self._db, self._cursor, self._sqlite = connect_dbs(year)
                 self._year = list(year)
+
         if filename_mapper:
             self._filename_mapper = filename_mapper
         else:
             self._filename_mapper = pnwstore_filename_mapper
         self._keys = mseedkeys
 
-    def query_waveforms(self, keys="*", **kwargs):
+        for l in self._get_status()[1:]:
+            if l[2] == "X":
+                logger.warning("Missing database for year %s at %s", l[0], l[1])
+            if l[4] == "X":
+                logger.warning("Missing mount for year %s at %s", l[0], l[3])
+
+    def _get_status(self) -> list[list[Any]]:
+        """Print per-year SQLite and mount availability as a text table."""
+        years = sorted(getattr(self, "_year", []))
+        if not years and isinstance(self._sqlite, str):
+            sqlite_name = os.path.basename(self._sqlite)
+            if sqlite_name.endswith(".sqlite") and sqlite_name[:-7].isdigit():
+                years = [int(sqlite_name[:-7])]
+
+        rows: list[list[Any]] = [
+            [
+                "year",
+                "database path",
+                "",
+                "mount path",
+                "",
+            ]
+        ]
+
+        for year in years:
+            sqlite_path = (
+                self._sqlite if isinstance(self._sqlite, str) else dbs_mapper(year)
+            )
+            sqlite_status = "OK" if os.path.exists(sqlite_path) else "X"
+
+            if self._filename_mapper is pnwstore_filename_mapper and year in wd_mapper:
+                mount_path = f"/auto/pnwstore1-{wd_mapper[year]}"
+                mount_status = "OK" if os.path.isdir(mount_path) else "X"
+            else:
+                mount_path = "custom_filename_mapper"
+                mount_status = "X"
+
+            rows.append([year, sqlite_path, sqlite_status, mount_path, mount_status])
+        return rows
+
+    def status(self):
+        table = Texttable()
+        table.set_deco(Texttable.HEADER | Texttable.VLINES)
+        table.set_cols_dtype(["i", "t", "t", "t", "t"])
+        table.add_rows(self._get_status())
+        print(table.draw())
+
+    def query_waveforms(self, keys: str | Sequence[str] = "*", **kwargs: Any):
         rst = self._query(keys, **kwargs)
         if keys == "*":
             return rst2df(rst, self._keys)
         else:
             return rst2df(rst, keys)
 
-    def _query(self, keys="*", showquery=False, **kwargs):
+    def _query(
+        self, keys: str | Sequence[str] = "*", showquery: bool = False, **kwargs: Any
+    ):
         if "year" not in kwargs:
             raise ValueError("year is required.")
         else:
@@ -106,7 +172,12 @@ class WaveformClient(object):
             return self._cursor.execute(query_str)
 
     def get_waveforms(
-        self, headeronly=False, starttime=None, endtime=None, filename=None, **kwargs
+        self,
+        headeronly: bool = False,
+        starttime: obspy.UTCDateTime | str | None = None,
+        endtime: obspy.UTCDateTime | str | None = None,
+        filename: str | None = None,
+        **kwargs: Any,
     ):
         if starttime and endtime:
             if isinstance(starttime, str):
@@ -116,11 +187,16 @@ class WaveformClient(object):
             if (starttime.year == endtime.year) and (
                 starttime.julday == endtime.julday
             ):
-                kwargs["year"] = starttime.year
-                kwargs["doy"] = starttime.julday
+                if starttime.year not in self._db:
+                    raise ValueError(
+                        f"Missing index database for year {starttime.year}"
+                    )
+                else:
+                    kwargs["year"] = starttime.year
+                    kwargs["doy"] = starttime.julday
             else:
                 raise NotImplementedError(
-                    "Multi-day streaming not implemented.\nStart/end time should be in the same day."
+                    "Multi-day streaming not implemented.\nStart/end time must be in the same day."
                 )
         rst = self._query(["byteoffset", "bytes", "filename"], **kwargs)
         s = obspy.Stream()
@@ -152,7 +228,19 @@ class WaveformClient(object):
         else:
             return s
 
-    def get_waveforms_bulk(self, bulk):
+    def get_waveforms_bulk(
+        self,
+        bulk: list[
+            tuple[
+                str,
+                str,
+                str,
+                str,
+                obspy.UTCDateTime,
+                obspy.UTCDateTime,
+            ]
+        ],
+    ):
         """
         Follow the API of obspy.clients.fdsn.client.Client.get_waveforms_bulk
         """
