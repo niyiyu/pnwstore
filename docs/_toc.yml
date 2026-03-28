@@ -1,4 +1,15 @@
 format: jb-book
 root: intro.md
-chapters:
-  - file: schema.md
+parts:
+  - caption: Getting Started
+    chapters:
+      - file: install.md
+      - file: usage.ipynb
+  - caption: Backend
+    chapters:
+      - file: backend/mseed.md
+      - file: backend/schema.md
+  - caption: Documentation & Issues
+    chapters:
+      - file: network_list.md
+      - file: data_issue.md

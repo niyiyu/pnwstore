@@ -1,5 +1,6 @@
 title: Pacific Northwest Seismic Data Store Access Tool
 author: Yiyu Ni
+copyright: "2026"
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
@@ -14,10 +15,6 @@ latex:
 # Add a bibtex file so that we can create citations
 # bibtex_bibfiles:
 #  - references.bib
-
-sphinx:
-  config:
-    bibtex_reference_style: author_year
 
 # Information about where the book exists on the web
 repository:

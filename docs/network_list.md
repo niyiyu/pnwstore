@@ -1,4 +1,7 @@
-# PNWstore network list
+# Network List
+
+The following table lists all the networks that have been used in the data archive, along with the years they were active and the size of the data they contributed to the archive. The network codes are as follows:
+
 |  Year  |   Network | Size |
 | -------|-----------|------|
 |  1980  |   DW, UW  | 36GB |
@@ -44,16 +47,3 @@
 |  2020  |   C8, CC, CN, GM, GS, IM, IU, NP, NV, OO, PB, RE, SB, TA, UI, UO, US, UW, ZK  | 9.2TB |
 |  2021  |   AM, CC, CN, GS, IM, IU, NP, NV, OO, PB, RE, SB, UI, UO, US, UW | 12TB |
 |  2022  |   AM, C8, CC, CN, GS, IM, IU, NP, NV, OO, PB, UI, UO, US, UW | 13TB |
-
-
-## Networks meta
-
-- 7A: off-shore
-- 7D: off-shore
-- OO: off-shore
-- X9: off-shore
-- Z5: off-shore
-
-## Reference
-* https://ds.iris.edu/mda/
-* https://ds.iris.edu/ds/

@@ -1,7 +1,7 @@
-## Database schema
+## Database Schema
 PNWstore uses mysql to index all seismic data. Below are the schemas for each table.
 
-### network schema
+### Network Schema
 ```mysql
 create table network (                             \
     channel_id MEDIUMINT NOT NULL AUTO_INCREMENT,  \
@@ -20,7 +20,7 @@ create table network (                             \
     PRIMARY KEY (channel_id)                       \
 );
 ```
-### catalog schema
+### Catalog Schema
 ```mysql
 create table catalog (                             \
     source_id VARCHAR(10) NOT NULL,                \
@@ -43,7 +43,7 @@ create table catalog (                             \
     PRIMARY KEY (source_id)                        \
 );
 ```
-### mseed schema
+### Mseed Schema
 Note that each year relates to an individual table.
 ```mysql
 create table mseed_YYYY (                         \
@@ -72,7 +72,7 @@ create table mseed_YYYY (                         \
 );
 ```
 
-### pick schema
+### Pick Schema
 Note that each contributor relates to an individual table.
 ```mysql
 create table picks_CONTRIBUTOR (                  \

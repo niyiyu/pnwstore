@@ -1,15 +1,15 @@
 # PNWstore: Pacific Northwest Storage
 [![DOI](https://zenodo.org/badge/479659348.svg)](https://zenodo.org/badge/latestdoi/479659348) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This is a python-based seismic data query and selection toolbox for [Denolle-lab](https://denolle-lab.github.io) members.
+This is a python-based seismic data query and selection toolbox for [Denolle-lab](https://denolle-lab.github.io) members. The server runs at https://pnwstore1.ess.washington.edu/ and is only accessible within the UW network.
 
 ## What data are in pnwstore?
-- mseed data at PNW (1980 - 2023)
+- mseed data from PNW (1980 - 2023)
 - network metadata (1980 - 2022)
-    - [network list here](./docs/netlist.md)
+    - [network list](https://niyiyu.github.io/pnwstore/network_list.html)
 - earthquake catalog contributed by
-    - [University of Washington/Pacific Northwest Seismic Network](https://pnsn.org/pnsn-data-products/earthquake-catalogs) (1980-2022)
-- list of known data issues could be found [here](./docs/data_issue.md).
+    - [Pacific Northwest Seismic Network](https://pnsn.org/pnsn-data-products/earthquake-catalogs) (1980-2022)
+- list of known data issues could be found [here](https://niyiyu.github.io/pnwstore/data_issue.html).
 
 ## Why use this package?
 1. The waveforms stored in `.mseed` are indexed with [mseedindex](https://github.com/iris-edu/mseedindex), which would dramatically improve data loading efficiency. This is very useful especially when working with large amounts of data.
