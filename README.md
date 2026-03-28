@@ -12,12 +12,12 @@ This is a python-based seismic data query and selection toolbox for [Denolle-lab
 - list of known data issues could be found [here](./docs/data_issue.md).
 
 ## Why use this package?
-1. The waveforms stored in `mseed` are indexed with [mseedindex](https://github.com/iris-edu/mseedindex), which would dramatically improve data loading efficiency. This is very useful especially when working with large amounts of data.
-2. `xml` files contain all events and station metadata, but loading and parsing them requires extra time. It is recommended to extract key informations and index them in a database system.
+1. The waveforms stored in `.mseed` are indexed with [mseedindex](https://github.com/iris-edu/mseedindex), which would dramatically improve data loading efficiency. This is very useful especially when working with large amounts of data.
+2. `.xml` files contain all events and station metadata, but loading and parsing them requires extra time. It is recommended to extract key informations and index them in a database system.
 3. The pnwstore client emulates the ObsPy FDSN client so that transition to the local data requires little changes to the codebase.
 
 ## Usage
-### Query and select stream
+### Get waveform data
 ```python
 from obspy import UTCDateTime
 from pnwstore import WaveformClient
@@ -29,7 +29,7 @@ s = client.get_waveforms(network="UW", station="SHW", channel="EH?",
                          starttime=starttime, endtime=endtime)
 ```
 
-### Query earthquake catalog
+### Get event catalog
 ```python
 from obspy import UTCDateTime
 from pnwstore import EventClient
@@ -50,7 +50,7 @@ client.query(mintime = UTCDateTime("1980-01-01T00:00:00"),
 
 ```
 
-### Query phase picks
+### Get picks
 ```python
 from obspy import UTCDateTime
 from pnwstore import PickClient
@@ -68,7 +68,7 @@ client.query(network = "UW", station = "SHW", phase = "P*",
 # 2 1133612  uw10484688      UW     SHW       --     EHZ  946890000.0  2000   1    3    3     9       0      14       280000     P          manual   0.22        222.1          UW
 ```
 
-### Query network meta
+### Get station metadata
 ```python
 from obspy import UTCDateTime
 from pnwstore import StationClient
@@ -85,108 +85,7 @@ client.query(network = "UW", channel = "EH?",
 ```
 
 ---
-## Database schema
-PNWstore uses mysql to index all seismic data. Below are the schemas for each table.
-### network schema
-```mysql
-create table network (                             \
-    channel_id MEDIUMINT NOT NULL AUTO_INCREMENT,  \
-    network VARCHAR(3) NOT NULL,                   \
-    station VARCHAR(5) NOT NULL,                   \
-    location VARCHAR(3) NOT NULL,                  \
-    channel CHAR(3) NOT NULL,                      \
-    latitude FLOAT NOT NULL,                       \
-    longitude FLOAT NOT NULL,                      \
-    elevation DECIMAL(6, 2) NOT NULL,              \
-    depth DECIMAL(6, 2) NOT NULL,                  \
-    starttime DECIMAL(16, 1) NOT NULL,             \
-    endtime DECIMAL(16, 1) NOT NULL,               \
-    sampling_rate     DECIMAL(10, 4) NOT NULL,     \
-    azimuth DECIMAL(5, 2),                         \
-    PRIMARY KEY (channel_id)                       \
-);
-```
-### catalog schema
-```mysql
-create table catalog (                             \
-    source_id VARCHAR(10) NOT NULL,                \
-    timestamp DECIMAL(16, 6) NOT NULL,             \
-    year SMALLINT NOT NULL,                        \
-    month TINYINT NOT NULL,                        \
-    day TINYINT NOT NULL,                          \
-    doy SMALLINT NOT NULL,                         \
-    hour TINYINT NOT NULL,                         \
-    minute TINYINT NOT NULL,                       \
-    second TINYINT NOT NULL,                       \
-    microsecond MEDIUMINT NOT NULL,                \
-    latitude FLOAT NOT NULL,                       \
-    longitude FLOAT NOT NULL,                      \
-    depth FLOAT NOT NULL,                          \
-    magnitude FLOAT NOT NULL,                      \
-    magnitude_type VARCHAR(2) NOT NULL,            \
-    contributor VARCHAR(4) NOT NULL,               \
-    number_of_pick SMALLINT NOT NULL,              \
-    PRIMARY KEY (source_id)                        \
-);
-```
-### mseed schema
-Note that each year relates to an individual table.
-```mysql
-create table mseed_YYYY (                         \
-    mseed_id MEDIUMINT NOT NULL AUTO_INCREMENT,   \
-    network VARCHAR(3) NOT NULL,                  \
-    station VARCHAR(5) NOT NULL,                  \
-    location VARCHAR(3) NOT NULL,                 \
-    channel CHAR(3) NOT NULL,                     \
-    quality CHAR(1) NOT NULL,                     \
-    version VARCHAR(4) NOT NULL,                  \
-    starttime VARCHAR(26) NOT NULL,               \
-    endtime VARCHAR(26) NOT NULL,                 \
-    samplerate FLOAT NOT NULL,                    \
-    filename VARCHAR(48) NOT NULL,                \
-    byteoffset INT NOT NULL,                      \
-    bytes INT NOT NULL,                           \
-    hash CHAR(32) NOT NULL,                       \
-    timeindex TEXT NOT NULL,                      \
-    timespans MEDIUMTEXT NOT NULL,                \
-    timerates TEXT,                               \
-    format TEXT,                                  \
-    filemodtime VARCHAR(26) NOT NULL,             \
-    updated VARCHAR(26) NOT NULL,                 \
-    scanned VARCHAR(26) NOT NULL,                 \
-    PRIMARY KEY (mseed_id)                        \
-);
-```
 
-### pick schema
-Note that each contributor relates to an individual table.
-```mysql
-create table picks_CONTRIBUTOR (                  \
-    pick_id INT NOT NULL AUTO_INCREMENT,          \
-    source_id VARCHAR(10) NOT NULL,               \
-    network VARCHAR(3) NOT NULL,                  \
-    station VARCHAR(5) NOT NULL,                  \
-    location VARCHAR(3) NOT NULL,                 \
-    channel CHAR(3) NOT NULL,                     \
-    timestamp DECIMAL(16, 6) NOT NULL,            \
-    year SMALLINT NOT NULL,                       \
-    month TINYINT NOT NULL,                       \
-    day TINYINT NOT NULL,                         \
-    doy SMALLINT NOT NULL,                        \
-    hour TINYINT NOT NULL,                        \
-    minute TINYINT NOT NULL,                      \
-    second TINYINT NOT NULL,                      \
-    microsecond MEDIUMINT NOT NULL,               \
-    phase VARCHAR(6) NOT NULL,                    \
-    evaluation_mode VARCHAR(10) NOT NULL,         \
-    onset VARCHAR(2),                             \
-    polarity VARCHAR(2),                          \
-    uncertainty FLOAT,                            \
-    backazimuth FLOAT,                            \
-    contributor VARCHAR(6) NOT NULL,              \
-    PRIMARY KEY (pick_id)                         \
-);"
-```
 
 ## Reference
 * https://pnsn.org

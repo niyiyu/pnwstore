@@ -1,2 +1,4 @@
 format: jb-book
 root: intro.md
+chapters:
+  - file: schema.md
