@@ -3,6 +3,8 @@
 
 This is a python-based seismic data query and selection toolbox for [Denolle-lab](https://denolle-lab.github.io) members. The server runs at https://pnwstore1.ess.washington.edu/ and is only accessible within the UW network.
 
+The pnwstore documentation can be found [here](https://niyiyu.github.io/pnwstore).
+
 ## What data are in pnwstore?
 - mseed data from PNW (1980 - 2023)
 - network metadata (1980 - 2022)
