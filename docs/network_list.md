@@ -47,3 +47,4 @@ The following table lists all the networks that have been used in the data archi
 |  2020  |   C8, CC, CN, GM, GS, IM, IU, NP, NV, OO, PB, RE, SB, TA, UI, UO, US, UW, ZK  | 9.2TB |
 |  2021  |   AM, CC, CN, GS, IM, IU, NP, NV, OO, PB, RE, SB, UI, UO, US, UW | 12TB |
 |  2022  |   AM, C8, CC, CN, GS, IM, IU, NP, NV, OO, PB, UI, UO, US, UW | 13TB |
+|  2023  |  N/A | N/A |

@@ -1,6 +1,6 @@
-## miniSEED Storage
+# miniSEED Storage
 
-### Storage
+## Storage
 
 All miniSEED files are stored on `pnwstore1.ess.washington.edu` under the directory `/data` and named by the data year. The data are organized so that multiple years may fill in a single drive/partition of 15 TB. The `/data/wd11` directory is used for station (`/data/wd11/PNWStationXML`) and event (`/data/wd11/PNWQuakeML`) metadata.
 
@@ -71,12 +71,12 @@ For each year, the files are organized as `<network>/<year>/<day-of-year>/<stati
 
 A `timeseries.sqlite` database is also stored under each year directory, which indexes the miniSEED files for that specific year. The database is generated using the `mseedindex` tool (see [here](https://github.com/EarthScope/mseedindex) for more details). PNWstore uses these databases to query byte ranges for specific channels and time ranges, which allows for efficient retrieval of miniSEED data without having to read entire files (save bandwidth when accessing data through cross-mount/ethernet).
 
-### Cross-mounting
+## Cross-mounting
 Most group machines have cross-mount configured to access pnwstore1 through ethernet. Mounting points are commonly saved at `/1-fnp` as symbolic links but can be configured at `/etc/auto.auto` (sudo required). Through cross-mounting, users can access files as if they were local. However, a path mapping is needed. For example, the above path to the VLL station file on Jan 1, 2020 would be accessed as `/1-fnp/pnwstore1/p-wd00/PNW2020/UW/2020/001/VLL.UW.2020.001`.
 
 For efficient query, database files are copied locally on each machine. See [here](https://github.com/niyiyu/pnwstore/blob/899bc6c36520adde181a5727ecc3343bc46230c1/pnwstore/constants.py#L48-L53) for the paths.
 
-### Check Status
+## Check Status
 The `WaveformClient` has a `status` method that reports database and cross mount status. Here, one can see that the cross-mount for `wd09` failed (shown as `X`).
 
 ```python

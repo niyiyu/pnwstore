@@ -1,7 +1,7 @@
-## Database Schema
+# Database Schema
 pnwstore1.ess.washington.edu runs the mysql server that hosts the `PNW` database. A username and password are required to access the database. Below are the schemas for the three main tables in the database: `network`, `catalog`, and `mseed`. The `picks` table is also included, but note that there are multiple tables for picks, each corresponding to a different contributor.
 
-### Network Schema
+## Network Schema
 ```mysql
 create table network (                             \
     channel_id MEDIUMINT NOT NULL AUTO_INCREMENT,  \
@@ -20,7 +20,7 @@ create table network (                             \
     PRIMARY KEY (channel_id)                       \
 );
 ```
-### Catalog Schema
+## Catalog Schema
 ```mysql
 create table catalog (                             \
     source_id VARCHAR(10) NOT NULL,                \
@@ -43,7 +43,7 @@ create table catalog (                             \
     PRIMARY KEY (source_id)                        \
 );
 ```
-### Mseed Schema
+## Mseed Schema
 Note that each year relates to an individual table.
 ```mysql
 create table mseed_YYYY (                         \
@@ -72,7 +72,7 @@ create table mseed_YYYY (                         \
 );
 ```
 
-### Pick Schema
+## Pick Schema
 Note that each contributor relates to an individual table.
 ```mysql
 create table picks_CONTRIBUTOR (                  \
