@@ -11,6 +11,7 @@ dependencies = [
     "obspy",
     "pandas",
     "mysql-connector-python",
+    "texttable",
 ]
 requires-python = ">=3.8"
 
