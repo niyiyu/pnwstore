@@ -1,10 +1,15 @@
 # Installation
 
-The project is not available on PyPI yet, so you will need to clone the repository and install it manually.
+The project is released to PyPI, so you can install it using the command below.
+```bash
+pip install pnwstore
+```
 
-```python
-git clone https://github.com/Denolle/pnwstore.git
-cd pnwstore
+If you want to install the latest development version, you can clone the repository and install it manually.
+
+```bash
+git clone https://github.com/Denolle/pnwstore.git pnwstore-dev
+cd pnwstore-dev
 pip install .
 ```
 

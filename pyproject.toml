@@ -12,6 +12,7 @@ dependencies = [
     "pandas",
     "mysql-connector-python",
     "texttable",
+    "tqdm",
 ]
 requires-python = ">=3.8"
 
