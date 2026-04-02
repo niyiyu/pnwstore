@@ -1,5 +1,5 @@
 # PNWstore: Pacific Northwest Storage
-[![DOI](https://zenodo.org/badge/479659348.svg)](https://zenodo.org/badge/latestdoi/479659348) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![DOI](https://zenodo.org/badge/479659348.svg)](https://zenodo.org/badge/latestdoi/479659348) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![PyPI Version](https://img.shields.io/pypi/v/pnwstore.svg)](https://pypi.python.org/pypi/pnwstore)
 
 This is a python-based seismic data query and selection toolbox for [Denolle-lab](https://denolle-lab.github.io) members. The server runs at https://pnwstore1.ess.washington.edu/ and is only accessible within the UW network. More details about the data and the server can be found in the [documentation](https://niyiyu.github.io/pnwstore).
 
